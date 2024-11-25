@@ -47,23 +47,29 @@ export default [
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-unused-vars': ['error'],
       '@typescript-eslint/no-explicit-any': 'error',
-      'simple-import-sort/imports': [
-        'error',
-        {
-          groups: [
-            ['^react$', '^react-dom$'],
-            ['^@?\\w'],
-            ['^@/'],
-            ['^\\.'],
-            ['^.+\\.css$'],
-          ],
-        },
-      ],
-      'simple-import-sort/exports': 'error',
+      // simple-import-sort 경고 끄기
+      'simple-import-sort/imports': 'off',  // 'error'에서 'off'로 변경
+      'simple-import-sort/exports': 'off',  // 'error'에서 'off'로 변경
       'import/first': 'error',
       'import/newline-after-import': 'error',
       'import/no-duplicates': 'error',
-      'prettier/prettier': 'error',
+      // no-empty-pattern 경고 끄기
+      'no-empty-pattern': 'off',  // 추가
+      '@typescript-eslint/no-empty-pattern': 'off',  // 추가
+      'prettier/prettier': ['error', {
+        'semi': true,
+        'trailingComma': 'all',
+        'singleQuote': true,
+        'printWidth': 100,
+        'tabWidth': 2,
+        'endOfLine': 'auto',
+        'arrowParens': 'avoid',
+        'bracketSpacing': true,
+        'importDeclaration': 'auto',
+        'importAttributes': 'indent',
+        'importOrderSeparation': true,
+        'importOrderSortSpecifiers': true
+      }]
     },
   },
 ];

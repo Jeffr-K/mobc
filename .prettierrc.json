@@ -5,5 +5,10 @@
   "printWidth": 100,
   "tabWidth": 2,
   "endOfLine": "auto",
-  "arrowParens": "avoid"
+  "arrowParens": "avoid",
+  "bracketSpacing": true,
+  "importDeclaration": "auto",
+  "importAttributes": "indent",
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true
 }
