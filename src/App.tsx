@@ -1,25 +1,37 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { ThemeProvider } from 'styled-components';
+
+import { HomePage } from '@/atomic/pages/home';
+import { LoungePage } from '@/atomic/pages/lounge';
+import { ProfilePage } from '@/atomic/pages/profile';
+import { SettingPage } from '@/atomic/pages/setting';
+
+import { LoginPage } from './atomic/pages/login';
+import { DefaultLayout } from './atomic/templates/@layout/@default';
+import { theme } from './core/common/theme/theme';
+
+const queryClient = new QueryClient();
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider theme={theme}>
+          <DefaultLayout>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/settings" element={<SettingPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/lounge" element={<LoungePage />} />
+            </Routes>
+          </DefaultLayout>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </BrowserRouter>
   );
 }
 

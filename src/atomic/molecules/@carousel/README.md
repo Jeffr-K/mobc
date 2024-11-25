@@ -1,0 +1,1 @@
+- [좋은 캐러셀 디자인을 위한 가이드 5가지](https://brunch.co.kr/@ebprux/41)
