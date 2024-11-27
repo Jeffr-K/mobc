@@ -13,7 +13,6 @@ export function LoungePage() {
   );
 }
 
-// Types
 interface Post {
   id: string;
   author: {
