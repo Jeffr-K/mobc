@@ -4,7 +4,7 @@ import * as MoleculeProfileCard from '@/atomic/molecules/@card/@profile/styles';
 import * as FeedGenerator from '@/atomic/organisms/@feed/@post/styles';
 import * as MoleculeNavigatorFooter from '@/atomic/organisms/@navigator/@bottom/styles';
 import * as Suggestions from '@/atomic/organisms/@suggestion/styles';
-import * as OrganismTrendingTopics from '@/atomic/organisms/@trend/@topics/styles';
+import * as OrganismTrendingTopics from '@/atomic/organisms/@box/@trend/@topics/styles';
 
 import * as MoleculeNavigator from '../../../molecules/@menu/@navigation/styles';
 import * as S from './styles';

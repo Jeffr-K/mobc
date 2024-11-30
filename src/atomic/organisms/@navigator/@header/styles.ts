@@ -17,7 +17,7 @@ export const Logo = styled.div`
   color: ${props => props.theme.colors.primary};
 `;
 
-export const NavList = styled.ul<{ isMobileOpen: boolean }>`
+export const NavList = styled.ul<{ $isMobileOpen: boolean }>`
   display: flex;
   gap: 20px;
   list-style: none;
@@ -30,14 +30,14 @@ export const NavList = styled.ul<{ isMobileOpen: boolean }>`
     flex-direction: column;
     background-color: white;
     padding: 20px;
-    display: ${props => (props.isMobileOpen ? 'flex' : 'none')};
+    display: ${props => (props.$isMobileOpen ? 'flex' : 'none')};
     border-bottom: 1px solid ${props => props.theme.colors.gray200};
   }
 `;
 
-export const NavItem = styled.li<{ isActive: boolean }>`
+export const NavItem = styled.li<{ $isActive: boolean }>`
   cursor: pointer;
-  color: ${props => (props.isActive ? props.theme.colors.primary : props.theme.colors.gray700)};
+  color: ${props => (props.$isActive ? props.theme.colors.primary : props.theme.colors.gray700)};
   &:hover {
     color: ${props => props.theme.colors.primary};
   }

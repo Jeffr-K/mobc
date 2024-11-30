@@ -1,7 +1,14 @@
 export function SettingPage() {
   return (
     <>
-      <h1>hello</h1>
+      <div>
+        <div className="left-sidebar">
+          <div>security</div>
+          <div>notification</div>
+          <div>language</div>
+          <div>privacy</div>
+        </div>
+      </div>
     </>
   );
 }

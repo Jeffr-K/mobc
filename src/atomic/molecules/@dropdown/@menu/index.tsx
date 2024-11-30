@@ -16,7 +16,7 @@ export const DropdownMenu = ({ trigger, items }: DropdownMenuProps) => {
   return (
     <S.DropdownContainer onBlur={() => setIsOpen(false)}>
       <S.DropdownButton onClick={() => setIsOpen(!isOpen)}>{trigger}</S.DropdownButton>
-      <S.DropdownContent isOpen={isOpen}>
+      <S.DropdownContent $isOpen={isOpen}>
         {items.map((item, index) => (
           <S.DropdownItem
             key={index}

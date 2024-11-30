@@ -1,11 +1,11 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const Container = styled.div`
   display: grid;
   max-width: 1280px;
   margin: 0 auto;
   padding: 0 ${props => props.theme.spacing.md};
-  grid-template-columns: minmax(0, 5fr) minmax(0, 12fr) minmax(300px, 7fr);
+  grid-template-columns: minmax(0, 4fr) minmax(0, 14fr) minmax(300px, 6fr);
   gap: ${props => props.theme.spacing.lg};
 
   @media (max-width: 1024px) {
@@ -19,6 +19,10 @@ export const Container = styled.div`
 `;
 
 export const LeftSidebar = styled.aside`
+  display: flex;
+  flex-direction: column;
+  gap: ${props => props.theme.spacing.lg};
+
   @media (max-width: 768px) {
     display: none;
   }

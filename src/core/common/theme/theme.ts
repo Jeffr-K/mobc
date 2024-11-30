@@ -36,10 +36,32 @@ export const theme = {
     md: '1rem',
     lg: '1.5rem',
     xl: '2rem',
+    lx: '2.5rem'
   },
   borderRadius: {
     sm: '0.25rem',
     md: '0.375rem',
     lg: '0.5rem',
   },
+  shadow: {
+    sm: '0 1px 3px rgba(0,0,0,0.12)',
+    md: '0 4px 6px -1px rgba(0,0,0,0.1)',
+    lg: '0 10px 15px -3px rgba(0,0,0,0.1)',
+    default: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)',
+  },
+  fontSize: {
+    xs: '0.75rem',    // 12px
+    sm: '0.875rem',   // 14px
+    base: '1rem',     // 16px
+    lg: '1.125rem',   // 18px
+    xl: '1.25rem',    // 20px
+    '2xl': '1.5rem',  // 24px
+  },
+  fontWeight: {
+    light: 300,
+    normal: 400,
+    medium: 500,
+    semibold: 600,
+    bold: 700
+  }
 };

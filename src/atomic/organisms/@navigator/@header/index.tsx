@@ -16,7 +16,7 @@ const menus = [
   { path: '/about', label: '소개' },
 ];
 
-export const Navigator = () => {
+export const Navigator = (): React.ReactElement => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
@@ -38,11 +38,11 @@ export const Navigator = () => {
 
       <S.Logo>LOGO</S.Logo>
 
-      <S.NavList isMobileOpen={isMobileOpen}>
+      <S.NavList $isMobileOpen={isMobileOpen}>
         {menus.map(menu => (
           <S.NavItem
             key={menu.path}
-            isActive={pathname === menu.path}
+            $isActive={pathname === menu.path}
             onClick={() => {
               navigate(menu.path);
               setIsMobileOpen(false);

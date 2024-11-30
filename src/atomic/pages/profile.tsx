@@ -1,7 +1,14 @@
+import { useState } from "react";
+
+import { ProfileLayout } from "@/atomic/templates/@layout/@profile";
+
 export function ProfilePage() {
+  const [isEdit, setIsEdit] = useState(false);
+  
   return (
-    <>
-      <h1>Hello, world!</h1>
-    </>
+    <ProfileLayout>
+      
+    </ProfileLayout>
   );
 }
+

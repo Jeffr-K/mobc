@@ -40,11 +40,32 @@ declare module 'styled-components' {
       md: string;
       lg: string;
       xl: string;
+      lx: string;
     };
     borderRadius: {
       sm: string;
       md: string;
       lg: string;
+    };
+    shadow: {
+      sm: string;
+      md: string;
+      lg: string;
+    };
+    fontSize: {
+      xs: string;
+      sm: string;
+      base: string;
+      lg: string;
+      xl: string;
+      '2xl': string;
+    };
+    fontWeight: {
+      light: number;
+      normal: number;
+      medium: number;
+      semibold: number;
+      bold: number;
     };
   }
 }
