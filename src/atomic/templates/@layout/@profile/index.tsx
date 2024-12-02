@@ -7,6 +7,8 @@ import { Experience } from '@/atomic/organisms/@box/@experience';
 import { Activity } from '@/atomic/organisms/@box/@activity';
 import { Spotlight } from '@/atomic/organisms/@box/@spotlight';
 import { Suggestion } from '@/atomic/organisms/@box/@suggestion';
+import { Repository } from '@/atomic/organisms/@box/@repository';
+import { Background } from '@/atomic/organisms/@box/@background';
 
 interface ProfileLayoutProps {
   children?: React.ReactNode;
@@ -31,6 +33,8 @@ const companyData = [
 export function ProfileLayout({ children }: ProfileLayoutProps) {
   return (
     <S.Container>
+      <Background />
+
       <S.LeftSidebar>
         <Analytics />
         <Company companyData={companyData} />
@@ -39,8 +43,9 @@ export function ProfileLayout({ children }: ProfileLayoutProps) {
       <S.MainContent>
         <Introduction />
         <Professional />
-        <Experience>{children}</Experience>
-        <Activity>{children}</Activity>
+        <Experience />
+        <Activity />
+        <Repository />
       </S.MainContent>
 
       <S.RightSidebar>

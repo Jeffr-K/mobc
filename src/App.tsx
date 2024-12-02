@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
@@ -12,6 +10,7 @@ import { SettingPage } from '@/atomic/pages/setting';
 import { LoginPage } from './atomic/pages/login';
 import { DefaultLayout } from './atomic/templates/@layout/@default';
 import { theme } from './core/common/theme/theme';
+import { Reset } from 'styled-reset';
 
 const queryClient = new QueryClient();
 
@@ -20,6 +19,7 @@ function App() {
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider theme={theme}>
+          <Reset />
           <DefaultLayout>
             <Routes>
               <Route path="/" element={<HomePage />} />
