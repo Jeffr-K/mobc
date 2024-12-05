@@ -7,7 +7,6 @@ import { LoungePage } from '@/atomic/pages/lounge';
 import { ProfilePage } from '@/atomic/pages/profile';
 import { SettingPage } from '@/atomic/pages/setting';
 
-import { LoginPage } from './atomic/pages/login';
 import { DefaultLayout } from './atomic/templates/@layout/@default';
 import { theme } from './core/common/theme/theme';
 import { Reset } from 'styled-reset';
@@ -23,7 +22,6 @@ function App() {
           <DefaultLayout>
             <Routes>
               <Route path="/" element={<HomePage />} />
-              <Route path="/login" element={<LoginPage />} />
               <Route path="/settings" element={<SettingPage />} />
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/lounge" element={<LoungePage />} />

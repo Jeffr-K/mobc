@@ -30,7 +30,7 @@ const companyData = [
   }
 ];
 
-export function ProfileLayout({ children }: ProfileLayoutProps) {
+export function ProfileLayout() {
   return (
     <S.Container>
       <Background />

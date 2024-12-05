@@ -6,9 +6,7 @@ export function ProfilePage() {
   const [isEdit, setIsEdit] = useState(false);
   
   return (
-    <ProfileLayout>
-      
-    </ProfileLayout>
+    <ProfileLayout />
   );
 }
 

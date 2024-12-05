@@ -9,9 +9,13 @@ interface DefaultLayoutProps {
 
 export const DefaultLayout = ({ children }: DefaultLayoutProps) => {
   return (
-    <S.Layout>
+    <S.Container>
       <Navigator />
-      <S.Main>{children}</S.Main>
-    </S.Layout>
+      <S.Content>
+        <S.ContentWrapper>
+          {children}
+        </S.ContentWrapper>
+      </S.Content>
+    </S.Container>
   );
 };

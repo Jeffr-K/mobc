@@ -1,14 +1,27 @@
 import styled from 'styled-components';
 
 export const Container = styled.nav`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   display: flex;
   height: 60px;
   align-items: center;
   gap: 16px;
-  margin: 0 auto;
+  width: 100%;
+  padding: 0 24px;
+  background: #FFFFFF;
+  z-index: 1000;
+`;
+
+export const ContentWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
   width: 100%;
   max-width: 1600px;
-  padding: 0 24px;
+  margin: 0 auto;
 
   @media (max-width: 1440px) {
     max-width: 1240px;
@@ -16,11 +29,6 @@ export const Container = styled.nav`
 
   @media (max-width: 1024px) {
     max-width: 100%;
-    padding: 0 16px;
-  }
-
-  @media (max-width: 768px) {
-    padding: 0 ${props => props.theme.spacing.sm};
   }
 `;
 
@@ -31,16 +39,28 @@ export const Logo = styled.div`
 `;
 
 export const IconWrapper = styled.div`
- display: flex;
- align-items: center;
- justify-content: center;
- cursor: pointer;
- padding: 8px;
- border-radius: ${({ theme }) => theme.borderRadius.sm};
- 
- &:hover {
-   background-color: ${({ theme }) => theme.colors.gray50};
- }
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
+  width: 36px;
+  height: 36px;
+  
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.gray50};
+  }
+
+  > div {
+    position: static;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 `;
 
 export const HotNewsWrapper = styled.div`
@@ -49,14 +69,15 @@ export const HotNewsWrapper = styled.div`
 `;
 
 export const SearchWrapper = styled.div`
- display: flex;
- align-items: center;
- gap: 8px;
- padding: 8px 12px;
- background-color: ${({ theme }) => theme.colors.gray50};
- border-radius: ${({ theme }) => theme.borderRadius.md};
- width: 100%;
- max-width: 480px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background-color: ${({ theme }) => theme.colors.gray50};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  width: 100%;
+  max-width: 480px;
 `;
 
 export const SearchInput = styled.input`
@@ -103,4 +124,18 @@ export const LeftIconGroup = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
+`;
+
+export const LoginButton = styled.button`
+  padding: 8px 16px;
+  border-radius: 4px;
+  background-color: transparent;
+  border: 1px solid #ccc;
+  color: inherit;
+  cursor: pointer;
+  font-size: 14px;
+  
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
 `;

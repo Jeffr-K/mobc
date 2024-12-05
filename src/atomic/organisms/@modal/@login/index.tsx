@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Modal } from '../../../atoms/@modal';
 import { LoginForm } from '../../../molecules/@form/@login';
 import * as S from './styles';
@@ -6,7 +7,7 @@ interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
   onLogin: (email: string, password: string) => Promise<void>;
-  onSocialLogin: (provider: string) => Promise<void>;
+  onSocialLogin?: (provider: string) => Promise<void>;
   isLoading?: boolean;
 }
 
@@ -17,9 +18,17 @@ export const LoginModal = ({
   onSocialLogin,
   isLoading,
 }: LoginModalProps) => {
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLoginSubmitButton = async (email: string, password: string) => {
+    await onLogin(email, password);
+  };
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="로그인">
-      <LoginForm onSubmit={onLogin} isLoading={isLoading} />
+      <LoginForm onSubmit={handleLoginSubmitButton} isLoading={isLoading} />
 
       <S.Divider>
         <S.DividerText>또는</S.DividerText>
