@@ -1,36 +1,23 @@
 import * as S from './styles';
 import { useState } from 'react';
-
-const experiences = [
-  {
-    logo: '/images/company1.svg',
-    name: 'Google',
-    area: 'Web Platform',
-    role: 'Senior Software Engineer',
-    period: '2020.03 - Present',
-    summary: 'Led development of core web platform features...'
-  },
-  {
-    logo: '/images/company2.svg', 
-    name: 'Facebook',
-    area: 'Frontend Infrastructure',
-    role: 'Software Engineer',
-    period: '2018.01 - 2020.02',
-    summary: 'Developed internal tools...'
-  },
-  {
-    logo: '/images/company3.svg',
-    name: 'Amazon',
-    area: 'AWS Services',
-    role: 'Software Developer',
-    period: '2016.01 - 2018.01',
-    summary: 'Built cloud infrastructure...'
-  }
-];
+import { useQueryProfileHook } from '@/platforms/member/modules/profile/api/hooks';
+import { useProfileStore } from '@/platforms/member/modules/profile/atom/atoms';
+import { LoadingSpinner } from '@/atomic/molecules/@loading';
+import { Error } from '@/atomic/molecules/@error';
 
 export const Experience = () => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const displayedExperiences = isExpanded ? experiences : experiences.slice(0, 2);
+  const hook = useQueryProfileHook();
+  const { profile } = useProfileStore();
+
+  if (hook.isLoading) return <LoadingSpinner />
+  if (hook.isError) return <Error />
+  if (!profile) return null;
+
+  const { experience } = profile;
+  const displayedExperiences = isExpanded ? experience : experience?.slice(0, 2);
+
+  if (!experience?.length) return null;
 
   return (
     <S.Container>
@@ -42,27 +29,33 @@ export const Experience = () => {
         {displayedExperiences.map((exp, index) => (
           <S.ExperienceCard key={index}>
             <S.LogoContainer>
-              <S.CompanyLogo src={exp.logo} alt={exp.name} />
+              <S.CompanyLogo src={exp.companyLogo} alt={exp.companyName} />
             </S.LogoContainer>
             
             <S.Content>
               <S.CompanyInfo>
-                <S.CompanyName>{exp.name}</S.CompanyName>
-                <S.CompanyArea>{exp.area}</S.CompanyArea>
+                <S.CompanyName>{exp.companyName}</S.CompanyName>
+                <S.CompanyArea>{exp.companyArea}</S.CompanyArea>
               </S.CompanyInfo>
               
               <S.RoleInfo>
                 <S.Role>{exp.role}</S.Role>
-                <S.Period>{exp.period}</S.Period>
+                <S.Period>
+                  {exp.period[0] && new Date(exp.period[0]).toLocaleDateString()} - 
+                  {exp.period[1] ? new Date(exp.period[1]).toLocaleDateString() : 'Present'}
+                </S.Period>
               </S.RoleInfo>
               
-              <S.Summary>{exp.summary}</S.Summary>
+              <S.Summary>{exp.description}</S.Summary>
+              {exp.summary && <S.Summary>{exp.summary}</S.Summary>}
+              {exp.location && <S.Location>{exp.location}</S.Location>}
+              {exp.team && <S.Team>Team: {exp.team}</S.Team>}
             </S.Content>
           </S.ExperienceCard>
         ))}
       </S.List>
       
-      {experiences.length > 2 && (
+      {displayedExperiences.length > 2 && (
         <S.ExpandButton onClick={() => setIsExpanded(!isExpanded)}>
           {isExpanded ? '접기' : '펼쳐보기'} 
           <S.ExpandIcon $isExpanded={isExpanded}>▼</S.ExpandIcon>

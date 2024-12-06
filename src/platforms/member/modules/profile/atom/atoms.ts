@@ -1,5 +1,5 @@
 import { atom, useAtom } from "jotai";
-import { Analytics, Introduction } from "../api/types";
+import { Analytics, Profile } from "../api/types";
 
 export const analyticsAtom = atom({
   totalViews: 0,
@@ -28,11 +28,13 @@ export const introductionAtom = atom({
   interest: '',
 });
 
-export const useIntroductionStore = () => {
-  const [introduction, setIntroduction] = useAtom(introductionAtom);
+export const profileAtom = atom<Profile | null>(null);
 
+export const useProfileStore = () => {
+  const [profile, setProfile] = useAtom(profileAtom);
+  
   return {
-    introduction,
-    setIntroduction: (data: Introduction) => setIntroduction(data),
-  }
-}
+    profile,
+    setProfile
+  };
+};

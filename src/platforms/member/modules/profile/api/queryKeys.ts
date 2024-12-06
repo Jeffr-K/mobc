@@ -5,4 +5,7 @@ export const QueryKeys = {
   introduction: {
     detail: (userId: string) => ['introduction', 'detail', userId] as const,
   },
+  profile: {
+    me: ['profile', 'me'] as const,
+  },
 } as const;

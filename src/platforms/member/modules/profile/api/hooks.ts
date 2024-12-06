@@ -1,9 +1,12 @@
 import { useQuery } from "react-query"
-import { fetchAnalytics, fetchIntroduction } from "./api";
-import { Analytics, Introduction } from "./types";
+import { fetchAnalytics } from "./api";
+import { Analytics } from "./types";
 import { ApiResponse } from '../../../../../core/utils/apiResponse';
 import { QueryKeys } from "./queryKeys";
-import { useAnalyticsStore, useIntroductionStore } from "../atom/atoms";
+import { useAnalyticsStore } from "../atom/atoms";
+import { fetchProfile } from './api';
+import { Profile } from './types';
+import { useProfileStore } from '../atom/atoms';
 
 export const useAnalyticsHook = (userId: string) => {
   const { setAnalytics } = useAnalyticsStore();
@@ -29,26 +32,20 @@ export const useAnalyticsHook = (userId: string) => {
   )
 }
 
-export const useIntroductionHook = (userId: string) => {
-  const { setIntroduction } = useIntroductionStore();
+export const useQueryProfileHook = () => {
+  const { setProfile } = useProfileStore();
 
-  return useQuery<ApiResponse<Introduction>, Error, Introduction>(
-    QueryKeys.introduction.detail(userId),
-    () => fetchIntroduction(userId),
+  return useQuery<ApiResponse<Profile>, Error>(
+    QueryKeys.profile.me,
+    fetchProfile,
     {
-      enabled: false,
-      retry: 1,
-      staleTime: 1000 * 60 * 5,
-      cacheTime: 1000 * 60 * 30,
-      select: (data: ApiResponse<Introduction>): Introduction => {
-        return data.data;
+      enabled: !!localStorage.getItem('accessToken'),
+      onSuccess: (data) => {
+        setProfile(data.data);
       },
-      onSuccess: (data: Introduction): void => {
-        setIntroduction(data);
-      },
-      onError: error => {
-        console.error('Error fetching @data:', error)
+      onError: (error) => {
+        console.error('Error fetching profile:', error);
       }
     }
-  )
-}
+  );
+};

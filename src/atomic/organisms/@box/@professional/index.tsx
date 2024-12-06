@@ -1,45 +1,47 @@
-// Professional.tsx
 import * as S from './styles';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
+import { useQueryProfileHook } from '@/platforms/member/modules/profile/api/hooks';
+import { useProfileStore } from '@/platforms/member/modules/profile/atom/atoms';
+import { LoadingSpinner } from '@/atomic/molecules/@loading';
+import { Error } from '@/atomic/molecules/@error';
 
-export const Professional = () => {
- const skills = [
-   { name: 'React', logo: '/images/react.svg' },
-   { name: 'TypeScript', logo: '/images/typescript.svg' },
-   { name: 'Node.js', logo: '/images/nodejs.svg' },
-   { name: 'Python', logo: '/images/python.svg' },
-   { name: 'AWS', logo: '/images/aws.svg' },
-   { name: 'Docker', logo: '/images/docker.svg' },
-   // 더 많은 기술 스택 추가
- ];
+export const Professional = () => { 
+  const hook = useQueryProfileHook();
+  const { profile } = useProfileStore();
 
- return (
-   <S.Container>
-     <S.Header>
-       <S.Title>Professional</S.Title>
-     </S.Header>
-     
-     <S.CarouselContainer>
-       <Swiper
-         modules={[Navigation]}
-         navigation
-         slidesPerView={5}
-         spaceBetween={20}
-         className="skill-swiper"
-       >
-         {skills.map((skill, index) => (
-           <SwiperSlide key={index}>
-             <S.SkillCard>
-               <S.SkillLogo src={skill.logo} alt={skill.name} />
-               <S.SkillLabel>{skill.name}</S.SkillLabel>
-             </S.SkillCard>
-           </SwiperSlide>
-         ))}
-       </Swiper>
-     </S.CarouselContainer>
-   </S.Container>
- );
+  if (hook.isLoading) return <LoadingSpinner />
+  if (hook.isError) return <Error />
+  if (!profile) return null;
+
+  const { skill } = profile;
+
+  return (
+    <S.Container>
+      <S.Header>
+        <S.Title>Professional</S.Title>
+      </S.Header>
+      
+      <S.CarouselContainer>
+        <Swiper
+          modules={[Navigation]}
+          navigation
+          slidesPerView={5}
+          spaceBetween={20}
+          className="skill-swiper"
+        >
+          {skill.stacks?.map((stack, index) => (
+            <SwiperSlide key={index}>
+              <S.SkillCard>
+                <S.SkillLogo src={stack.image} alt={stack.name} />
+                <S.SkillLabel>{stack.name}</S.SkillLabel>
+              </S.SkillCard>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </S.CarouselContainer>
+    </S.Container>
+  );
 };

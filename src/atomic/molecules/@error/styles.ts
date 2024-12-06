@@ -16,13 +16,13 @@ export const Icon = styled.span`
 `;
 
 export const Message = styled.p`
-  color: ${props => props.theme.colors.error};
-  font-size: ${props => props.theme.fontSizes.md};
-  font-weight: ${props => props.theme.fontWeights.medium};
-  margin-bottom: ${props => props.theme.spacing.xs};
+  color: ${({ theme }) => theme.colors.error};
+  font-size: ${({ theme }) => theme.fontSizes.md};
+  font-weight: ${({ theme }) => theme.fontWeights.medium};
+  margin-bottom: ${({ theme }) => theme.spacing.xs};
 `;
 
 export const SubMessage = styled.p`
-  color: ${props => props.theme.colors.gray600};
-  font-size: ${props => props.theme.fontSizes.sm};
+  color: ${({ theme }) => theme.colors.gray600};
+  font-size: ${({ theme }) => theme.fontSizes.sm};
 `;

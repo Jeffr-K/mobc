@@ -81,8 +81,9 @@ export const CompanyName = styled.h3`
 `;
 
 export const CompanyArea = styled.span`
- font-size: 16px;
- color: ${({ theme }) => theme.colors.gray600};
+  font-size: 14px;
+  color: ${props => props.theme.colors.gray500};
+  margin-left: 8px;
 `;
 
 export const RoleInfo = styled.div`
@@ -103,10 +104,10 @@ export const Period = styled.span`
 `;
 
 export const Summary = styled.p`
- font-size: 16px;
- line-height: 1.6;
- color: ${({ theme }) => theme.colors.gray700};
- margin: 0;
+  font-size: 14px;
+  color: ${props => props.theme.colors.gray700};
+  line-height: 1.6;
+  margin-top: 12px;
 `;
 
 export const ExpandButton = styled.button`
@@ -133,4 +134,16 @@ export const ExpandButton = styled.button`
 export const ExpandIcon = styled.span<{ $isExpanded: boolean }>`
   transform: rotate(${props => props.$isExpanded ? '180deg' : '0deg'});
   transition: transform 0.2s ease;
+`;
+
+export const Location = styled.div`
+  font-size: 14px;
+  color: ${props => props.theme.colors.gray600};
+  margin-top: 8px;
+`;
+
+export const Team = styled.div`
+  font-size: 14px;
+  color: ${props => props.theme.colors.gray600};
+  margin-top: 4px;
 `;
