@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { Modal } from '../../../atoms/@modal';
 import { LoginForm } from '../../../molecules/@form/@login';
 import * as S from './styles';
+import { Modal } from '@/atomic/atoms/@modal/modal';
 
 interface LoginModalProps {
   isOpen: boolean;

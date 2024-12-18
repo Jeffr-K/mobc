@@ -74,18 +74,6 @@ export const Navigator = (): React.ReactElement => {
     };
   }, [user, userData, setUser]);
 
-  useClickOutside(searchRef, () => {
-    if (isSearchOpen) setIsSearchOpen(false);
-  });
-
-  useClickOutside(messageRef, () => {
-    if (isMessageOpen) setIsMessageOpen(false);
-  });
-
-  useClickOutside(notificationRef, () => {
-    if (isNotificationOpen) setIsNotificationOpen(false);
-  });
-
   const handleLocalLogin = async (email: string, password: string) => {
     setIsLoading(true);
     try {
@@ -109,6 +97,7 @@ export const Navigator = (): React.ReactElement => {
       setIsLoading(false);
     }
   };
+  
   const renderProfileSection = () => {
     if (!user?.uuid) {
       return (
@@ -135,6 +124,19 @@ export const Navigator = (): React.ReactElement => {
       </>
     );
   };
+
+  useClickOutside(searchRef, () => {
+    if (isSearchOpen) setIsSearchOpen(false);
+  });
+
+  useClickOutside(messageRef, () => {
+    if (isMessageOpen) setIsMessageOpen(false);
+  });
+
+  useClickOutside(notificationRef, () => {
+    if (isNotificationOpen) setIsNotificationOpen(false);
+  });
+
 
   const handleLogoClick = () => navigate('/');
   const handleLoginClick = () => setIsLoginModalOpen(true);

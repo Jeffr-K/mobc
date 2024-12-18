@@ -6,10 +6,13 @@ import { HomePage } from '@/atomic/pages/home';
 import { LoungePage } from '@/atomic/pages/lounge';
 import { ProfilePage } from '@/atomic/pages/profile';
 import { SettingPage } from '@/atomic/pages/setting';
+import { Navigator } from '@/atomic/organisms/@navigator/@header';
 
-import { DefaultLayout } from './atomic/templates/@layout/@default';
+import { DefaultLayout } from './atomic/template/@layout/@default';
 import { theme } from './core/common/theme/theme';
 import { Reset } from 'styled-reset';
+import { RegistrationPage } from './atomic/pages/registration';
+import { GlobalStyle } from './core/common/font/global.font';
 
 const queryClient = new QueryClient();
 
@@ -19,14 +22,17 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <ThemeProvider theme={theme}>
           <Reset />
-          <DefaultLayout>
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/settings" element={<SettingPage />} />
-              <Route path="/profile" element={<ProfilePage />} />
-              <Route path="/lounge" element={<LoungePage />} />
-            </Routes>
-          </DefaultLayout>
+          <GlobalStyle />
+          <Navigator />
+          <Routes>
+            <Route path="/" element={<DefaultLayout />}>
+              <Route index element={<HomePage />} />
+              <Route path="settings" element={<SettingPage />} />
+              <Route path="profile" element={<ProfilePage />} />
+              <Route path="lounge" element={<LoungePage />} />
+              <Route path="/registration" element={<RegistrationPage />} />
+            </Route>
+          </Routes>
         </ThemeProvider>
       </QueryClientProvider>
     </BrowserRouter>

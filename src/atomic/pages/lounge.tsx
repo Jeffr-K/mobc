@@ -3,7 +3,8 @@ import React, { useState } from 'react';
 import { Heart, MessageCircle, MoreHorizontal, Share2 } from 'lucide-react';
 import styled from 'styled-components';
 
-import { LoungeLayout } from '@/atomic/templates/@layout/@lounge';
+import { LoungeLayout } from '@/atomic/template/@layout/@lounge';
+import { Post } from '@/platforms/lounge/feed/\bapi/types';
 
 export function LoungePage() {
   return (
@@ -11,21 +12,6 @@ export function LoungePage() {
       <PostFeed />
     </LoungeLayout>
   );
-}
-
-interface Post {
-  id: string;
-  author: {
-    name: string;
-    avatar: string;
-    title: string;
-  };
-  content: string;
-  timestamp: string;
-  likes: number;
-  comments: number;
-  shares: number;
-  images?: string[];
 }
 
 const FeedContainer = styled.div`

@@ -11,9 +11,5 @@ export const Input = styled.input`
   width: 20px;
   height: 20px;
   cursor: pointer;
-`;
-
-export const Label = styled.label`
-  font-size: 14px;
-  cursor: pointer;
+  accent-color: ${({ theme }) => theme.colors.primary};
 `;

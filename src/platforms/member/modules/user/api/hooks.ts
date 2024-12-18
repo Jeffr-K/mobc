@@ -3,13 +3,17 @@ import { ApiResponse } from '../../../../../core/utils/apiResponse';
 import { fetchUser } from './api';
 import { QueryKeys } from './queryKeys';
 import { User } from './types';
+import { useLocation } from 'react-router-dom';
 
 export const useQueryUserHook = () => {
+  const location = useLocation();
+  const isRegistrationPage = location.pathname === '/registration';
+
   const { data, refetch, ...queryResults } = useQuery<any, Error>(
     QueryKeys.user.me,
     fetchUser,
     {
-      enabled: !!localStorage.getItem('accessToken'),
+      enabled: !!localStorage.getItem('accessToken') && !isRegistrationPage,
       retry: 1,
       staleTime: Infinity,
       cacheTime: Infinity,
