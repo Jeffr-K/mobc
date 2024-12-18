@@ -35,6 +35,6 @@ export const useProfileStore = () => {
   
   return {
     profile,
-    setProfile
+    setProfile: (data: Profile) => void setProfile(data)
   };
 };

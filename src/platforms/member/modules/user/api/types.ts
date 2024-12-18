@@ -5,19 +5,15 @@ export interface Agreement {
 }
 
 export interface User {
-  id: string;
-  name: string;
+  uuid: string;
+  username: string;
+  nickname: string;
   email: string;
-  age?: number;
-  birth?: string;
-  phone?: string;
-  password: string;
-  registeredFrom: string;
-  agreements: Agreement[];
+  agreements: Agreement;
+  _id: number;
   createdAt: string;
-  updatedAt: string;
-  withdrawalAt: string | null;
-  withdrawalReason: string;
+  updatedAt: string | null;
+  deletedAt: string | null;
 }
 
 export interface ApiResponse<T> {

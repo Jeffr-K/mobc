@@ -35,13 +35,14 @@ export const useAnalyticsHook = (userId: string) => {
 export const useQueryProfileHook = () => {
   const { setProfile } = useProfileStore();
 
-  return useQuery<ApiResponse<Profile>, Error>(
+  return useQuery<ApiResponse<Profile>, Error, Profile>(
     QueryKeys.profile.me,
     fetchProfile,
     {
       enabled: !!localStorage.getItem('accessToken'),
-      onSuccess: (data) => {
-        setProfile(data.data);
+      select: (response: ApiResponse<Profile>): Profile => response.data,
+      onSuccess: (data: Profile) => {
+        setProfile(data);
       },
       onError: (error) => {
         console.error('Error fetching profile:', error);

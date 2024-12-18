@@ -45,10 +45,34 @@ export const Navigator = (): React.ReactElement => {
   const notificationRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (userData) {
-      setUser(userData);
+    const handleBeforeUnload = () => {
+      if (user) {
+        localStorage.setItem('user', JSON.stringify(user));
+      }
+    };
+  
+    const token = localStorage.getItem('accessToken');
+    const storedUser = localStorage.getItem('user');
+    if (token && storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+  
+      // 현재 user 상태와 로컬 스토리지의 user가 다를 때만 업데이트
+      if (!user || user.uuid !== parsedUser.uuid) {
+        setUser(parsedUser);
+      }
+    } else if (token && userData) {
+      // 현재 user 상태와 userData가 다를 때만 업데이트
+      if (!user || user.uuid !== userData.uuid) {
+        setUser(userData);
+      }
     }
-  }, [userData, setUser]);
+  
+    window.addEventListener('beforeunload', handleBeforeUnload);
+  
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [user, userData, setUser]);
 
   useClickOutside(searchRef, () => {
     if (isSearchOpen) setIsSearchOpen(false);
@@ -62,11 +86,6 @@ export const Navigator = (): React.ReactElement => {
     if (isNotificationOpen) setIsNotificationOpen(false);
   });
 
-  const handleLoginSuccess = async () => {
-    setIsLoginModalOpen(false);
-    navigate('/');
-  };
-
   const handleLocalLogin = async (email: string, password: string) => {
     setIsLoading(true);
     try {
@@ -76,20 +95,45 @@ export const Navigator = (): React.ReactElement => {
         localStorage.setItem('accessToken', result.data.accessToken);
         localStorage.setItem('refreshToken', result.data.refreshToken);
         
-        const { data: updatedUser } = await refetch();
-        if (updatedUser) {
-          setUser(updatedUser);
+        const response = await refetch();
+        if (response) {
+          setUser(response.data);
+          localStorage.setItem('user', JSON.stringify(response.data));
+          setIsLoginModalOpen(false);
+          navigate('/');
         }
-        
-        await handleLoginSuccess();
-      } else {
-        console.error("로그인 응답에 토큰이 없음:", result);
       }
     } catch (error) {
-      console.error('Login failed with error:', error);
+      console.error('Login failed:', error);
     } finally {
       setIsLoading(false);
     }
+  };
+  const renderProfileSection = () => {
+    if (!user?.uuid) {
+      return (
+        <S.LoginButton onClick={handleLoginClick}>
+          로그인하기
+        </S.LoginButton>
+      );
+    }
+
+    return (
+      <>
+        <S.ProfileWrapper onClick={handleProfileClick}>
+          <S.ProfileImage>
+            <UserIcon size={24} />
+          </S.ProfileImage>
+          <S.ProfileName>{user.username || '사용자'}</S.ProfileName>
+        </S.ProfileWrapper>
+        
+        <Atom.Divider />
+        
+        <S.IconWrapper onClick={handleSettingsClick}>
+          <Settings size={20} />
+        </S.IconWrapper>
+      </>
+    );
   };
 
   const handleLogoClick = () => navigate('/');
@@ -121,32 +165,6 @@ export const Navigator = (): React.ReactElement => {
     setIsNotificationOpen(false);
   };
 
-  const renderProfileSection = () => {
-    if (!user) {
-      return (
-        <S.LoginButton onClick={handleLoginClick}>
-          로그인하기
-        </S.LoginButton>
-      );
-    }
-
-    return (
-      <>
-        <S.ProfileWrapper onClick={handleProfileClick}>
-          <S.ProfileImage>
-            <UserIcon size={24} />
-          </S.ProfileImage>
-          <S.ProfileName>{user.name || '사용자'}</S.ProfileName>
-        </S.ProfileWrapper>
-        
-        <Atom.Divider />
-        
-        <S.IconWrapper onClick={handleSettingsClick}>
-          <Settings size={20} />
-        </S.IconWrapper>
-      </>
-    );
-  };
  
   return (
     <>
