@@ -4,9 +4,9 @@ import { Heart, MessageCircle, MoreHorizontal, Share2 } from 'lucide-react';
 import styled from 'styled-components';
 
 import { LoungeLayout } from '@/atomic/template/@layout/@lounge';
-import { Post } from '@/platforms/lounge/feed/\bapi/types';
+import { Feed } from '@/platforms/lounge/feed/\bapi/types';
 
-export function LoungePage() {
+export function LoungePage(): React.ReactElement {
   return (
     <LoungeLayout>
       <PostFeed />
@@ -106,7 +106,7 @@ const ActionButton = styled.button<{ isActive?: boolean }>`
   }
 `;
 
-const mockPosts: Post[] = [
+const mockPosts: Feed[] = [
   {
     id: '1',
     author: {

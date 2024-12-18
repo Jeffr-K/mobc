@@ -1,4 +1,4 @@
-export interface Post {
+export interface Feed {
   id: string;
   author: {
     name: string;
