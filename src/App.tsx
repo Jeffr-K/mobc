@@ -9,10 +9,10 @@ import { SettingPage } from '@/atomic/pages/setting';
 import { Navigator } from '@/atomic/organisms/@navigator/@header';
 
 import { DefaultLayout } from './atomic/template/@layout/@default';
-import { theme } from './core/common/theme/theme';
+import { theme } from './infrastructure/common/theme/theme';
 import { Reset } from 'styled-reset';
 import { RegistrationPage } from './atomic/pages/registration';
-import { GlobalStyle } from './core/common/font/global.font';
+import { GlobalStyle } from './infrastructure/common/font/global.font';
 
 const queryClient = new QueryClient();
 

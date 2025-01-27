@@ -2,27 +2,26 @@ import * as S from './styles';
 import { useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
-import { useQueryProfileHook } from '@/platforms/member/modules/profile/api/hooks';
-import { useProfileStore } from '@/platforms/member/modules/profile/atom/atoms';
+
 import { LoadingSpinner } from '@/atomic/molecules/@loading';
 import { Error } from '@/atomic/molecules/@error';
 import 'swiper/css';
 import 'swiper/css/navigation';
+import { useQueryProfileActivitiesHook } from '@/modules/member/modules/profile/api/hooks';
+import { useProfileActivitiesStore } from '@/modules/member/modules/profile/atom/atoms';
+import { Activity as IActivity } from '@/modules/member/modules/profile/api/types';
 
 export const Activity = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedActivity, setSelectedActivity] = useState(null);
-  const hook = useQueryProfileHook();
-  const { profile } = useProfileStore();
+  const hook = useQueryProfileActivitiesHook();
+  const { activities } = useProfileActivitiesStore();
 
   if (hook.isLoading) return <LoadingSpinner />
   if (hook.isError) return <Error />
-  if (!profile) return null;
+  if (!activities?.length) return null;
 
-  const { activity } = profile;
-  if (!activity?.item?.length) return null;
-
-  const handleActivityClick = (activity) => {
+  const handleActivityClick = (activity: IActivity) => {
     setSelectedActivity(activity);
     setModalOpen(true);
   };
@@ -40,14 +39,13 @@ export const Activity = () => {
           spaceBetween={20}
           slidesPerView={3}
         >
-          {activity.item.map((item) => (
-            <SwiperSlide key={item.id}>
-              <S.ActivityCard onClick={() => handleActivityClick(item)}>
-                <S.ActivityImage src={item.image} alt={item.title} />
+          {activities.map((activity: IActivity) => (
+            <SwiperSlide key={activity.id}>
+              <S.ActivityCard onClick={() => handleActivityClick(activity)}>
                 <S.ActivityContent>
-                  <S.ActivityTitle>{item.title}</S.ActivityTitle>
-                  <S.ActivityDate>{new Date(item.createdAt).toLocaleDateString()}</S.ActivityDate>
-                  <S.ActivityDescription>{item.description}</S.ActivityDescription>
+                  <S.ActivityTitle>{activity.title}</S.ActivityTitle>
+                  <S.ActivityDate>{new Date(activity.createdAt).toLocaleDateString()}</S.ActivityDate>
+                  <S.ActivityDescription>{activity.description}</S.ActivityDescription>
                 </S.ActivityContent>
               </S.ActivityCard>
             </SwiperSlide>
@@ -91,19 +89,18 @@ export const Activity = () => {
                     <S.DetailItem>
                       <S.DetailLabel>Topics</S.DetailLabel>
                       <S.TopicsList>
-                        {selectedActivity.details.topics.map((topic, index) => (
-                          <S.TopicTag key={index}>{topic}</S.TopicTag>
+                        {selectedActivity.details.topics.map((topic) => (
+                          <S.TopicTag key={`topic-${topic}`}>{topic}</S.TopicTag>  // index 대신 topic 값 자체를 key로 사용
                         ))}
                       </S.TopicsList>
                     </S.DetailItem>
                   )}
-                  
                   {selectedActivity.details.highlights && (
                     <S.DetailItem>
                       <S.DetailLabel>Highlights</S.DetailLabel>
                       <S.HighlightsList>
-                        {selectedActivity.details.highlights.map((highlight, index) => (
-                          <S.HighlightItem key={index}>{highlight}</S.HighlightItem>
+                        {selectedActivity.details.highlights.map((highlight) => (
+                          <S.HighlightItem key={`highlight-${highlight}`}>{highlight}</S.HighlightItem>  // index 대신 highlight 값 자체를 key로 사용
                         ))}
                       </S.HighlightsList>
                     </S.DetailItem>

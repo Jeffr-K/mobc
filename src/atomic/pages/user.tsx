@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { useQueryUserHook } from '../../platforms/member/modules/user/api/hooks';
+import { useQueryUserHook } from '../../modules/member/modules/user/api/hooks';
 
 export function UserPage(): React.ReactElement {
   const userId = '191a12fd-38b1-4033-b8a4-3d309b0002eb';

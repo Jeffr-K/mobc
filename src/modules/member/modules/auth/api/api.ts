@@ -1,0 +1,27 @@
+import { ApiResponse } from "@/infrastructure/utils/apiResponse";
+import { fetcher } from "@/infrastructure/utils/axios";
+import { Session } from "./types";
+import axios from "axios";
+
+export const fetchLogin = async (email: string, password: string): Promise<ApiResponse<Session>> => {
+  const response = await fetcher.post<ApiResponse<Session>>('/v1/auth/login', {
+    email,
+    password
+  });
+  return response.data;
+};
+
+export const fetchSocialLogin = async (provider: string): Promise<ApiResponse<Session>> => {
+  const response = await fetcher.post<ApiResponse<Session>>(`/v1/auth/${provider}/login`);
+  return response.data;
+};
+
+export const fetchLogout = async () => {
+  const accessToken = localStorage.getItem('accessToken');
+
+  await fetcher.delete('/v1/auth/logout', {
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    }
+  });
+};

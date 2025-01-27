@@ -1,15 +1,15 @@
 import { LoadingSpinner } from '@/atomic/molecules/@loading';
 import { Error } from '@/atomic/molecules/@error';
 import * as S from './styles';
-import { useQueryProfileHook } from '@/platforms/member/modules/profile/api/hooks';
-import { useProfileStore } from '@/platforms/member/modules/profile/atom/atoms';
+import { useQueryProfileHook } from '@/modules/member/modules/profile/api/hooks';
+import { useProfileStore } from '@/modules/member/modules/profile/atom/atoms';
 
 export const Persona = () => {
   const hook = useQueryProfileHook();
   const { profile } = useProfileStore();
 
-  if (hook.isLoading) return <LoadingSpinner />
-  if (hook.isError) return <Error />
+  if (hook.isLoading) return <LoadingSpinner />;
+  if (hook.isError) return <Error />;
   if (!profile) return null;
 
   const { persona } = profile;
@@ -22,7 +22,7 @@ export const Persona = () => {
       </S.Header>
 
       <S.Section>
-        <S.Nickname>{profile.user.name}</S.Nickname>
+        <S.Nickname>{profile.user.username}</S.Nickname>
         <S.Text>{persona.summary}</S.Text>
       </S.Section>
 

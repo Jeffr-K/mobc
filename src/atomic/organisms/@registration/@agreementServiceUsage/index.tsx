@@ -56,7 +56,7 @@ export function AgreementServiceUsage() {
 
           <S.CheckboxWrapper>
             <Molecule.Checkbox
-              name="(필수) 커리어리 이용약관 동의"
+              name="(필수) 페르소나 이용약관 동의"
               checked={agreements.terms}
               onChange={handleChange('terms')}
               required

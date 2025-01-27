@@ -14,7 +14,7 @@ interface ProfileMenuProps {
   onSettings: () => void;
 }
 
-export const ProfileMenu = ({ user, onLogout, onSettings }: ProfileMenuProps) => (
+export const ProfileMenu = ({ user, onLogout, onSettings }: ProfileMenuProps): React.ReactElement => (
   <Molecule.DropdownMenu
     trigger={
       <S.ProfileTrigger>

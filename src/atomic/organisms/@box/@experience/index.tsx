@@ -1,23 +1,22 @@
 import * as S from './styles';
 import { useState } from 'react';
-import { useQueryProfileHook } from '@/platforms/member/modules/profile/api/hooks';
-import { useProfileStore } from '@/platforms/member/modules/profile/atom/atoms';
+import { useQueryProfileExperiencesHook } from '@/modules/member/modules/profile/api/hooks';
+import { useProfileExperiencesStore } from '@/modules/member/modules/profile/atom/atoms';
 import { LoadingSpinner } from '@/atomic/molecules/@loading';
 import { Error } from '@/atomic/molecules/@error';
 
 export const Experience = () => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const hook = useQueryProfileHook();
-  const { profile } = useProfileStore();
+  const hook = useQueryProfileExperiencesHook();
+  const { experiences } = useProfileExperiencesStore();
 
   if (hook.isLoading) return <LoadingSpinner />
   if (hook.isError) return <Error />
-  if (!profile) return null;
+  if (!experiences) return null;
 
-  const { experience } = profile;
-  const displayedExperiences = isExpanded ? experience : experience?.slice(0, 2);
+  const displayedExperiences = isExpanded ? experiences : experiences?.slice(0, 2);
 
-  if (!experience?.length) return null;
+  if (!displayedExperiences?.length) return null;
 
   return (
     <S.Container>
@@ -30,7 +29,7 @@ export const Experience = () => {
           <S.ExperienceCard key={index}>
             <S.LogoContainer>
               <S.CompanyLogo src={exp.companyLogo} alt={exp.companyName} />
-            </S.LogoContainer>
+            </S.LogoContainer>  
             
             <S.Content>
               <S.CompanyInfo>

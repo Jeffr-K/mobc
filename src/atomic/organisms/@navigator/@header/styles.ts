@@ -139,3 +139,15 @@ export const LoginButton = styled.button`
     background-color: rgba(0, 0, 0, 0.05);
   }
 `;
+
+export const ProfileContainer = styled.div`
+  position: relative;
+`;
+
+export const DropdownContainer = styled.div`
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  z-index: 1000;
+`;

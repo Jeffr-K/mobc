@@ -1,6 +1,6 @@
-import { useAnalyticsHook } from '@/platforms/member/modules/profile/api/hooks';
+import { useAnalyticsHook } from '@/modules/member/modules/profile/api/hooks';
 import * as S from './styles';
-import { useAnalyticsStore } from '@/platforms/member/modules/profile/atom/atoms';
+import { useAnalyticsStore } from '@/modules/member/modules/profile/atom/atoms';
 import { LoadingSpinner } from '@/atomic/molecules/@loading';
 import { Error } from '@/atomic/molecules/@error';
 

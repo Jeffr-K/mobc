@@ -1,18 +1,86 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import { Heart, MessageCircle, MoreHorizontal, Share2 } from 'lucide-react';
 import styled from 'styled-components';
 
 import { LoungeLayout } from '@/atomic/template/@layout/@lounge';
-import { Feed } from '@/platforms/lounge/feed/\bapi/types';
+import { useFeedsQueryHook } from '@/modules/lounge/feed/\bapi/hooks';
 
 export function LoungePage(): React.ReactElement {
+  const { feeds, isLoading, error } = useFeedsQueryHook({
+    page: 0,
+    size: 10,
+    sort: 'createdAt:desc',
+    limit: 10
+  });
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error!</div>;
+
   return (
     <LoungeLayout>
-      <PostFeed />
+      <PostFeed feeds={feeds} />
     </LoungeLayout>
   );
 }
+
+export function PostFeed({ feeds }: { feeds: any }) {
+  console.log('feeds', feeds);
+
+  if (!feeds || !Array.isArray(feeds)) {
+    return null;
+  }
+
+  return (
+    <FeedContainer>
+      {feeds.map((feed: any) => (
+        <PostCard key={feed._id  || feed.id}>
+          <PostHeader>
+            <AuthorInfo>
+              <Avatar 
+                src={feed.author?.avatar || 'https://via.placeholder.com/48'} 
+                alt={feed.author?.name || 'User'} 
+              />
+              <AuthorMeta>
+                <AuthorName>{feed.author?.name || 'Anonymous'}</AuthorName>
+                <AuthorTitle>{feed.author?.title || ''}</AuthorTitle>
+              </AuthorMeta>
+            </AuthorInfo>
+            <ActionButton>
+              <MoreHorizontal size={20} />
+            </ActionButton>
+          </PostHeader>
+
+          <PostContent>{feed.content}</PostContent>
+
+          {feed.images?.length > 0 && (
+            <PostImages>
+              {feed.images.map((image, index) => (
+                <PostImage key={index} src={image.url} alt="Post content" />
+              ))}
+            </PostImages>
+          )}
+
+          <PostActions>
+            <ActionButton>
+              <Heart size={20} />
+              <span>{feed.likes || 0}</span>
+            </ActionButton>
+            <ActionButton>
+              <MessageCircle size={20} />
+              <span>{feed.comments || 0}</span>
+            </ActionButton>
+            <ActionButton>
+              <Share2 size={20} />
+              <span>{feed.shares || 0}</span>
+            </ActionButton>
+          </PostActions>
+        </PostCard>
+      ))}
+    </FeedContainer>
+  );
+}
+
 
 const FeedContainer = styled.div`
   display: flex;
@@ -105,87 +173,3 @@ const ActionButton = styled.button<{ isActive?: boolean }>`
     background: ${props => props.theme.colors.gray100};
   }
 `;
-
-const mockPosts: Feed[] = [
-  {
-    id: '1',
-    author: {
-      name: '홍길동',
-      avatar: 'https://via.placeholder.com/48',
-      title: '소프트웨어 엔지니어 @ Tech Company',
-    },
-    content: '오늘은 새로운 프로젝트를 시작했습니다. React와 TypeScript를 사용하여 멋진 애플리케이션을 만들 예정입니다. 많은 관심 부탁드립니다! 👨‍💻✨',
-    timestamp: '2시간 전',
-    likes: 42,
-    comments: 5,
-    shares: 2,
-    images: ['https://via.placeholder.com/400x300'],
-  },
-  {
-    id: '2',
-    author: {
-      name: '김영희',
-      avatar: 'https://via.placeholder.com/48',
-      title: 'UX Designer @ Design Studio',
-    },
-    content: '사용자 경험을 개선하기 위한 새로운 디자인 시스템을 구축 중입니다. 일관성 있는 UI/UX를 제공하는 것이 얼마나 중요한지 다시 한 번 느끼고 있네요.',
-    timestamp: '4시간 전',
-    likes: 28,
-    comments: 3,
-    shares: 1,
-  },
-];
-
-export function PostFeed() {
-  const [posts, setPosts] = useState<Post[]>(mockPosts);
-
-  const handleLike = (postId: string) => {
-    setPosts(posts.map(post => (post.id === postId ? { ...post, likes: post.likes + 1 } : post)));
-  };
-
-  return (
-    <FeedContainer>
-      {posts.map(post => (
-        <PostCard key={post.id}>
-          <PostHeader>
-            <AuthorInfo>
-              <Avatar src={post.author.avatar} alt={post.author.name} />
-              <AuthorMeta>
-                <AuthorName>{post.author.name}</AuthorName>
-                <AuthorTitle>{post.author.title}</AuthorTitle>
-              </AuthorMeta>
-            </AuthorInfo>
-            <ActionButton>
-              <MoreHorizontal size={20} />
-            </ActionButton>
-          </PostHeader>
-
-          <PostContent>{post.content}</PostContent>
-
-          {post.images && post.images.length > 0 && (
-            <PostImages>
-              {post.images.map((image, index) => (
-                <PostImage key={index} src={image} alt="Post content" />
-              ))}
-            </PostImages>
-          )}
-
-          <PostActions>
-            <ActionButton onClick={() => handleLike(post.id)}>
-              <Heart size={20} />
-              <span>{post.likes}</span>
-            </ActionButton>
-            <ActionButton>
-              <MessageCircle size={20} />
-              <span>{post.comments}</span>
-            </ActionButton>
-            <ActionButton>
-              <Share2 size={20} />
-              <span>{post.shares}</span>
-            </ActionButton>
-          </PostActions>
-        </PostCard>
-      ))}
-    </FeedContainer>
-  );
-}

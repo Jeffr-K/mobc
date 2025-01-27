@@ -1,22 +1,21 @@
 import * as S from './styles';
 import { useState } from 'react';
-import { useQueryProfileHook } from '@/platforms/member/modules/profile/api/hooks';
-import { useProfileStore } from '@/platforms/member/modules/profile/atom/atoms';
+import { useQueryProfileGaragesHook } from '@/modules/member/modules/profile/api/hooks';
+import { useProfileGarageStore } from '@/modules/member/modules/profile/atom/atoms';
 import { LoadingSpinner } from '@/atomic/molecules/@loading';
 import { Error } from '@/atomic/molecules/@error';
 
 export const Garage = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedRepo, setSelectedRepo] = useState(null);
-  const hook = useQueryProfileHook();
-  const { profile } = useProfileStore();
+  const { isLoading, isError } = useQueryProfileGaragesHook();
+  const { garages } = useProfileGarageStore();
 
-  if (hook.isLoading) return <LoadingSpinner />
-  if (hook.isError) return <Error />
-  if (!profile) return null;
-
-  const { garage } = profile;
-  if (!garage?.items?.length) return null;
+  if (isLoading) return <LoadingSpinner />
+  if (isError) return <Error />
+  if (!garages) return null;
+  
+  if (!garages.length) return null;
 
   const handleRepoClick = (e, repo) => {
     e.preventDefault();
@@ -31,33 +30,33 @@ export const Garage = () => {
       </S.Header>
       
       <S.Grid>
-        {garage.items.map((repo, index) => (
+        {garages.map((garage, index) => (
           <S.RepoCard 
             key={index} 
-            href={repo.url} 
-            onClick={(e) => handleRepoClick(e, repo)}
+            href={garage.url ? garage.url : ''} 
+            onClick={(e) => handleRepoClick(e, garage)}
           >
             <S.RepoHeader>
-              <S.RepoName>{repo.name}</S.RepoName>
+              <S.RepoName>{garage.title}</S.RepoName>
               <S.RepoVisibility>Public</S.RepoVisibility>
             </S.RepoHeader>
             
-            <S.RepoDescription>{repo.description}</S.RepoDescription>
+            <S.RepoDescription>{garage.description}</S.RepoDescription>
             
             <S.RepoFooter>
               <S.RepoLanguage>
                 <S.LanguageIcon />
-                {repo.language}
+                    {garage.language ? garage.language : ''}
               </S.RepoLanguage>
               
               <S.RepoStats>
                 <S.StatItem>
                   <S.StarIcon />
-                  {repo.stars}
+                  {garage.stars ? garage.stars : ''}
                 </S.StatItem>
                 <S.StatItem>
                   <S.ForkIcon />
-                  {repo.forks}
+                  {garage.forks ? garage.forks : ''}
                 </S.StatItem>
               </S.RepoStats>
             </S.RepoFooter>
@@ -96,35 +95,7 @@ export const Garage = () => {
                   ))}
                 </S.FeatureList>
               </S.ModalSection>
-
-              <S.ModalSection>
-                <S.SectionTitle>Statistics</S.SectionTitle>
-                <S.StatsGrid>
-                  <S.StatBox>
-                    <S.StatLabel>Contributors</S.StatLabel>
-                    <S.StatValue>{selectedRepo.details?.contributors}</S.StatValue>
-                  </S.StatBox>
-                  <S.StatBox>
-                    <S.StatLabel>Commits</S.StatLabel>
-                    <S.StatValue>{selectedRepo.details?.commits}</S.StatValue>
-                  </S.StatBox>
-                  <S.StatBox>
-                    <S.StatLabel>Issues</S.StatLabel>
-                    <S.StatValue>{selectedRepo.details?.issues}</S.StatValue>
-                  </S.StatBox>
-                  <S.StatBox>
-                    <S.StatLabel>Pull Requests</S.StatLabel>
-                    <S.StatValue>{selectedRepo.details?.pullRequests}</S.StatValue>
-                  </S.StatBox>
-                </S.StatsGrid>
-              </S.ModalSection>
-
-              <S.ModalFooter>
-                <S.ViewButton href={selectedRepo.url} target="_blank" rel="noopener noreferrer">
-                  View on GitHub
-                </S.ViewButton>
-              </S.ModalFooter>
-            </S.ModalBody>
+            </S.ModalBody>      
           </S.ModalContent>
         </S.Modal>
       )}

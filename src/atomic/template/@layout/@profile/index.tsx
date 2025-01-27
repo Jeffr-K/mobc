@@ -2,7 +2,7 @@ import * as S from './styles';
 import { Analytics } from '@/atomic/organisms/@box/@analytics';
 import { Company } from '@/atomic/organisms/@box/@company';
 import { Persona } from '@/atomic/organisms/@box/@persona';
-import { Professional } from '@/atomic/organisms/@box/@professional';
+import { Skill } from '@/atomic/organisms/@box/@professional';
 import { Experience } from '@/atomic/organisms/@box/@experience';
 import { Activity } from '@/atomic/organisms/@box/@activity';
 import { Spotlight } from '@/atomic/organisms/@box/@spotlight';
@@ -42,7 +42,7 @@ export function ProfileLayout() {
 
       <S.MainContent>
         <Persona />
-        <Professional />
+        <Skill />
         <Experience />
         <Activity />
         <Garage />
