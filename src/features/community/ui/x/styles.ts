@@ -720,7 +720,6 @@ export const ReviewActions = styled.div`
 export const ReviewInput = styled.div`
   display: flex;
   gap: 12px;
-  padding-left: 44px;
   margin-top: 12px;
   width: 100%;
   box-sizing: border-box;
