@@ -1,10 +1,26 @@
 import { Bookmark, Eye, Heart, MessageCircle, MoreHorizontal } from "lucide-react";
-import { ActionButton, AuthorInfo, AuthorMeta, AuthorName, AuthorTitle, Avatar, Category, CategoryWrapper, FeedContainer, PostActions, PostCard, PostContent, PostHeader, PostText, SubCategory } from "../x/styles";
+import {
+  ActionButton,
+  AuthorInfo,
+  AuthorMeta,
+  AuthorName,
+  AuthorTitle,
+  Avatar,
+  Category,
+  CategoryWrapper,
+  FeedContainer,
+  PostActions,
+  PostCard,
+  PostContent,
+  PostHeader,
+  PostText,
+  SubCategory,
+} from "../x/styles";
 
-export function PostFeed({
+export function Feeds({
   feeds,
   selectedFeedId,
-  onFeedSelect
+  onFeedSelect,
 }: {
   feeds: any;
   selectedFeedId: number | null;
@@ -17,11 +33,7 @@ export function PostFeed({
   return (
     <FeedContainer>
       {feeds.map((feed: any) => (
-        <PostCard
-          key={feed._id || feed.id}
-          isSelected={feed.id === selectedFeedId}
-          onClick={() => onFeedSelect(feed.id)}
-        >
+        <PostCard key={feed._id ?? feed.id} isSelected={feed.id === selectedFeedId} onClick={() => onFeedSelect(feed.id)}>
           <PostContent>
             <PostHeader>
               <ActionButton isMoreButton>
@@ -33,15 +45,12 @@ export function PostFeed({
               <SubCategory>{feed.subCategory}</SubCategory>
             </CategoryWrapper>
             <AuthorInfo>
-              <Avatar
-                src={feed.author?.avatar || 'https://via.placeholder.com/32'}
-                alt={feed.author?.name || 'User'}
-              />
+              <Avatar src={feed.author?.avatar || "https://via.placeholder.com/32"} alt={feed.author?.name || "User"} />
               <AuthorMeta>
-                <AuthorName>{feed.author?.name || 'Anonymous'}</AuthorName>
+                <AuthorName>{feed.author?.name || "Anonymous"}</AuthorName>
                 <AuthorTitle>
                   {feed.author?.title}
-                  <span style={{ margin: '0 4px' }}>·</span>
+                  <span style={{ margin: "0 4px" }}>·</span>
                   {feed.author?.shortDescription}
                 </AuthorTitle>
               </AuthorMeta>

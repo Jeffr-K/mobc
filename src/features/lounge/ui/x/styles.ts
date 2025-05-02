@@ -7,23 +7,6 @@ export const Container = styled.div`
   width: 100%;
 `;
 
-export const LeftSidebar = styled.aside`
-  width: 240px;
-  padding: 0;
-  background: none;
-  height: calc(100vh - 84px);
-  position: sticky;
-  top: 84px;
-
-  > * {
-    padding: 0 24px;
-  }
-
-  > *:first-child {
-    margin-top: 24px;
-  }
-`;
-
 export const SidebarTitle = styled.h2`
   font-size: 18px;
   font-weight: 600;
@@ -47,35 +30,6 @@ export const PopularItem = styled.div`
   gap: 8px;
 `;
 
-export const RankNumber = styled.span`
-  color: #868e96;
-  font-size: 14px;
-  font-weight: 600;
-  min-width: 16px;
-`;
-
-export const PopularTitle = styled.span`
-  flex: 1;
-  font-size: 14px;
-  color: #495057;
-
-  &:hover {
-    color: #228be6;
-  }
-`;
-
-export const Badge = styled.span`
-  background: linear-gradient(135deg, #ff6b6b 0%, #ff4444 100%);
-  color: white;
-  padding: 4px 8px;
-  border-radius: 12px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
-`;
-
 export const MainContent = styled.main`
   flex: 1;
   padding: 24px 0 24px 24px;
@@ -89,179 +43,12 @@ export const MainContent = styled.main`
   }
 `;
 
-export const BannerSection = styled.section`
-  width: 100%;
-  height: 200px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 12px;
-  margin-bottom: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  margin-right: 24px;
-`;
-
-export const BannerContent = styled.div`
-  text-align: center;
-  h1 {
-    font-size: 32px;
-    margin-bottom: 12px;
-  }
-  p {
-    font-size: 18px;
-    opacity: 0.9;
-  }
-`;
-
 export const CategoryContainer = styled.section`
   margin-bottom: 24px;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   padding-right: 0;
-`;
-
-export const CategoryLeft = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-`;
-
-export const CategoryRight = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 16px;
-`;
-
-export const WriteButton = styled.button`
-  padding: 8px 24px;
-  background: #667eea;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: all 0.2s;
-
-  &:hover {
-    background: #5a6fd6;
-    transform: translateY(-1px);
-  }
-
-  svg {
-    width: 16px;
-    height: 16px;
-  }
-`;
-
-export const MainCategories = styled.div`
-  display: flex;
-  gap: 12px;
-  margin-bottom: 16px;
-`;
-
-export const MainCategoryButton = styled.button<{ selected: boolean }>`
-  padding: 8px 16px;
-  border: none;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  background: ${props => props.selected ? '#667eea' : '#f5f5f5'};
-  color: ${props => props.selected ? 'white' : '#333'};
-  transition: all 0.2s;
-
-  &:hover {
-    background: ${props => props.selected ? '#667eea' : '#e5e5e5'};
-  }
-`;
-
-export const SubCategories = styled.div`
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-`;
-
-export const SubCategoryTag = styled.span`
-  padding: 6px 12px;
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 20px;
-  font-size: 14px;
-  color: #666;
-  cursor: pointer;
-  transition: all 0.2s;
-
-  &:hover {
-    background: #f5f5f5;
-    border-color: #999;
-  }
-`;
-
-export const SearchResult = styled.div`
-  color: ${({ theme }) => theme.colors.text.secondary};
-  font-size: 14px;
-`;
-
-export const FilterDropdown = styled.div`
-  position: relative;
-`;
-
-export const FilterButton = styled.button`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  border: 1px solid #e9ecef;
-  border-radius: 6px;
-  background: white;
-  color: #495057;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.2s;
-
-  &:hover {
-    background: #f8f9fa;
-  }
-
-  svg {
-    font-size: 12px;
-  }
-`;
-
-export const DropdownMenu = styled.div<{ isOpen: boolean }>`
-  position: absolute;
-  top: 100%;
-  right: 0;
-  margin-top: 4px;
-  margin-right: 24px;
-  background: white;
-  border: 1px solid #e9ecef;
-  border-radius: 6px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  display: ${props => props.isOpen ? 'block' : 'none'};
-  z-index: 10;
-  min-width: 120px;
-`;
-
-export const DropdownItem = styled.button<{ isSelected?: boolean }>`
-  width: 100%;
-  padding: 8px 16px;
-  border: none;
-  background: ${props => props.isSelected ? '#f8f9fa' : 'white'};
-  color: ${props => props.isSelected ? '#228be6' : '#495057'};
-  font-size: 14px;
-  text-align: left;
-  cursor: pointer;
-
-  &:hover {
-    background: #f8f9fa;
-  }
 `;
 
 export const ContentContainer = styled.div`
@@ -295,8 +82,8 @@ export const FeedContainer = styled.div`
 `;
 
 export const PostCard = styled.article<{ isSelected?: boolean }>`
-  background: ${props => props.isSelected ? '#f8f9fa' : 'white'};
-  border: 1px solid ${props => props.isSelected ? '#dee2e6' : '#e9ecef'};
+  background: ${props => (props.isSelected ? "#f8f9fa" : "white")};
+  border: 1px solid ${props => (props.isSelected ? "#dee2e6" : "#e9ecef")};
   border-radius: 8px;
   margin-bottom: 16px;
   transition: all 0.2s;
@@ -318,7 +105,7 @@ export const PostContent = styled.div`
 
 export const PostHeader = styled.div`
   display: flex;
-  justify-content: flex-end;  // 우측 정렬
+  justify-content: flex-end; // 우측 정렬
   margin-bottom: 12px;
 `;
 
@@ -326,7 +113,7 @@ export const AuthorInfo = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 16px;  // 프로필과 글 사이 갭 추가
+  margin-bottom: 16px; // 프로필과 글 사이 갭 추가
 `;
 
 export const Avatar = styled.img`
@@ -385,10 +172,12 @@ export const ActionButton = styled.button<{ isActive?: boolean; isMoreButton?: b
   padding: 4px;
   border: none;
   background: none;
-  color: ${props => props.isActive ? '#228be6' : '#868e96'};
+  color: ${props => (props.isActive ? "#228be6" : "#868e96")};
   cursor: pointer;
   font-size: 12px;
-  ${props => props.isMoreButton && `
+  ${props =>
+    props.isMoreButton &&
+    `
     position: absolute;
     top: 0;
     right: 0;
@@ -424,14 +213,6 @@ export const SubCategory = styled.span`
   font-size: 12px;
   color: #868e96;
   display: inline-block;
-`;
-
-export const FilterSection = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-  padding-right: 0;
 `;
 
 // 상세 컴포넌트 전용 스타일
@@ -471,7 +252,7 @@ export const DetailSubCategory = styled.div`
 
 export const DetailProfileSection = styled.div`
   display: flex;
-  align-items: center;  // flex-start에서 center로 변경
+  align-items: center; // flex-start에서 center로 변경
   justify-content: space-between;
   gap: 12px;
   margin-bottom: 24px;
@@ -485,7 +266,7 @@ export const DetailProfileWrapper = styled.div`
 
 export const DetailProfileBasic = styled.div`
   display: flex;
-  align-items: center;  // flex-start에서 center로 변경
+  align-items: center; // flex-start에서 center로 변경
   gap: 12px;
 `;
 
@@ -554,20 +335,20 @@ export const DetailContainer = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  overflow: hidden;  // 스크롤이 DetailContent에만 적용되도록
+  overflow: hidden; // 스크롤이 DetailContent에만 적용되도록
 `;
 
 export const DetailHeader = styled.div`
   border-bottom: 1px solid #e9ecef;
   padding-bottom: 16px;
   margin-bottom: 16px;
-  position: relative;  // ActionButton 위치 기준점
+  position: relative; // ActionButton 위치 기준점
 `;
 
 export const DetailContent = styled.div`
   flex: 1;
   overflow-y: auto;
-  padding-right: 8px;  // 스크롤바 여백
+  padding-right: 8px; // 스크롤바 여백
 
   &::-webkit-scrollbar {
     width: 6px;
@@ -612,7 +393,7 @@ export const ReviewSection = styled.div`
   padding-top: 24px;
   width: 100%;
   box-sizing: border-box;
-  overflow-x: hidden;  // 가로 스크롤 제거
+  overflow-x: hidden; // 가로 스크롤 제거
 `;
 
 export const ReviewHeader = styled.div`
@@ -737,7 +518,7 @@ export const ReviewTextField = styled.textarea`
   line-height: 1.5;
   color: #495057;
   box-sizing: border-box;
-  overflow: hidden;  // 스크롤 제거
+  overflow: hidden; // 스크롤 제거
 
   &::placeholder {
     color: #adb5bd;
@@ -764,7 +545,7 @@ export const ReplyInputWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
-  min-width: 0;  // flex item 오버플로우 방지
+  min-width: 0; // flex item 오버플로우 방지
 `;
 
 export const ReplyTextField = styled.textarea`
@@ -779,7 +560,7 @@ export const ReplyTextField = styled.textarea`
   line-height: 1.5;
   color: #495057;
   box-sizing: border-box;
-  overflow: hidden;  // 스크롤 제거
+  overflow: hidden; // 스크롤 제거
 
   &::placeholder {
     color: #adb5bd;
@@ -799,25 +580,17 @@ export const ReplyButtonGroup = styled.div`
 
 export const ReplyButton = styled.button<{ primary?: boolean }>`
   padding: 6px 12px;
-  border: 1px solid ${props => props.primary ? '#228be6' : '#dee2e6'};
+  border: 1px solid ${props => (props.primary ? "#228be6" : "#dee2e6")};
   border-radius: 4px;
-  background: ${props => props.primary ? '#228be6' : 'white'};
-  color: ${props => props.primary ? 'white' : '#495057'};
+  background: ${props => (props.primary ? "#228be6" : "white")};
+  color: ${props => (props.primary ? "white" : "#495057")};
   font-size: 13px;
   cursor: pointer;
   transition: all 0.2s;
 
   &:hover {
-    background: ${props => props.primary ? '#1c7ed6' : '#f8f9fa'};
+    background: ${props => (props.primary ? "#1c7ed6" : "#f8f9fa")};
   }
 `;
 
 // EmptyMessage 스타일 컴포넌트 추가
-export const EmptyMessage = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  color: #868e96;
-  font-size: 14px;
-`;
