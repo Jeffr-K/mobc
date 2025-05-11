@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 export const Container = styled.div`
   display: flex;
@@ -8,8 +8,7 @@ export const Container = styled.div`
   justify-content: center;
   width: 100%;
   max-width: 400px;
-  padding: ${({ theme }) => theme.spacing.xl} ${({ theme }) => theme.spacing.xl} 
-    ${({ theme }) => theme.spacing.xxl};
+  padding: ${({ theme }) => theme.spacing.xl} ${({ theme }) => theme.spacing.xl} ${({ theme }) => theme.spacing.xxl};
 `;
 
 export const HeaderContainer = styled.div`
@@ -104,7 +103,7 @@ export const Divider = styled.div`
   text-align: center;
 
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 50%;
     left: 0;
@@ -160,15 +159,15 @@ export const StyledLink = styled(Link)`
   white-space: nowrap;
   flex: 1;
   text-align: center;
-  
+
   &:first-child {
     text-align: left;
   }
-  
+
   &:last-child {
     text-align: right;
   }
-  
+
   &:hover {
     text-decoration: underline;
   }

@@ -1,27 +1,26 @@
-import { QueryClient, QueryClientProvider } from 'react-query';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { ThemeProvider } from 'styled-components';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { ThemeProvider } from "styled-components";
 
-import { LoungePage } from '@/pages/community/lounge';
-import { ProfilePage } from '@/pages/user/profile';
-import { SettingPage } from '@/pages/user/setting';
-import { Navigator } from '@/shared/atomic/organisms/@navigator/@header';
+import { LoungePage } from "@/pages/community/lounge";
+import { ProfilePage } from "@/pages/user/profile";
+import { SettingPage } from "@/pages/user/setting";
+import { Navigator } from "@/shared/atomic/organisms/@navigator/@header";
 
-import { DefaultLayout } from './shared/atomic/template/@layout/@default';
-import { theme } from './shared/common/theme/theme';
-import { Reset } from 'styled-reset';
+import { DefaultLayout } from "./shared/atomic/template/@layout/@default";
+import { theme } from "./shared/common/theme/theme";
+import { Reset } from "styled-reset";
 
-import { GlobalStyle } from './shared/common/font/global.font';
-import { HomePage } from './pages/home/home';
-import { RegistrationPage } from './pages/home/registration';
-import { CarrersPage } from './pages/carrers/carrer';
-import { CarrerDetailPage } from './pages/carrers/carrer-details';
-import { Organization } from './pages/organization/organization';
-import { OrganizationRegistrationPage } from './pages/organization/organization-registration';
-import { TalentPoolPage } from './pages/organization/talent-pool';
-import { CavePage } from './pages/cave/cave';
-import { CaveDetailPage } from './pages/cave/cave-detail';
-
+import { GlobalStyle } from "./shared/common/font/global.font";
+import { HomePage } from "./pages/home/home";
+import { RegistrationPage } from "./pages/home/registration";
+import { CarrersPage } from "./pages/carrers/carrer";
+import { CarrerDetailPage } from "./pages/carrers/carrer-details";
+import { Organization } from "./pages/organization/organization";
+import { OrganizationRegistrationPage } from "./pages/organization/organization-registration";
+import { TalentPoolPage } from "./pages/organization/talent-pool";
+import { CavePage } from "./pages/cave/cave";
+import { CaveDetailPage } from "./pages/cave/cave-detail";
 
 const queryClient = new QueryClient();
 

@@ -8,7 +8,6 @@ export const fetcher = axios.create({
   },
 });
 
-// 요청 인터셉터 추가
 fetcher.interceptors.request.use(
   config => {
     const token = localStorage.getItem("accessToken");
@@ -18,7 +17,6 @@ fetcher.interceptors.request.use(
     return config;
   },
   error => {
-    return Promise.reject(error);
+    return Promise.reject(new Error(`Request interceptor error: ${error.message}`));
   },
 );
-//

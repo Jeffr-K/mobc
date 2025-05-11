@@ -1,30 +1,20 @@
-import { useNavigate } from 'react-router-dom';
-import React, { useState, useEffect, useRef } from 'react';
-import * as Atom from '../../../atoms';
-import {
-  Grip,
-  Shell,
-  Search,
-  ScanSearch,
-  Mail,
-  Bell,
-  Settings,
-  User as UserIcon,
-  Coffee,
-} from 'lucide-react';
-import * as S from './styles';
-import { HotNews } from '@/shared/atomic/molecules/@hotNews';
-import { LoginModal } from '../../@modal/@login';
-import { useAtom } from 'jotai';
-import { NotificationBox } from '@/shared/atomic/organisms/@box/@notification';
-import { MessageBox } from '@/shared/atomic/organisms/@box/@message';
-import { SearchBox } from '@/shared/atomic/organisms/@box/@search';
-import { useClickOutside } from '@/shared/hooks/useClickOutside';
-import { DropdownMenu } from '@/shared/atomic/molecules/@menu/@dropdown';
-import { useQueryUserHook } from '@/entities/user/interface/user.hooks';
-import { User } from '@/entities/user/lib/types/user.types';
-import { useMutationLoginHook } from '@/entities/auth/interface/auth.hooks';
-import { userAtom } from '@/entities/user/adapter/user.atoms';
+import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
+import * as Atom from "../../../atoms";
+import { Grip, Shell, Search, ScanSearch, Mail, Bell, Settings, User as UserIcon, Coffee } from "lucide-react";
+import * as S from "./styles";
+import { HotNews } from "@/shared/atomic/molecules/@hotNews";
+import { LoginModal } from "../../@modal/@login";
+import { useAtom } from "jotai";
+import { NotificationBox } from "@/shared/atomic/organisms/@box/@notification";
+import { MessageBox } from "@/shared/atomic/organisms/@box/@message";
+import { SearchBox } from "@/shared/atomic/organisms/@box/@search";
+import { useClickOutside } from "@/shared/hooks/useClickOutside";
+import { DropdownMenu } from "@/shared/atomic/molecules/@menu/@dropdown";
+import { useQueryUserHook } from "@/entities/user/interface/user.hooks";
+import { useMutationLoginHook } from "@/entities/auth/interface/auth.hooks";
+import { userAtom } from "@/entities/user/adapter/user.atoms";
+import { User } from "@/entities/user/model/user.model";
 
 export const Navigator = (): React.ReactElement => {
   const navigate = useNavigate();
@@ -34,7 +24,7 @@ export const Navigator = (): React.ReactElement => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useAtom<User | null>(userAtom);
-  const { userData, refetch } = useQueryUserHook();
+  const { refetch } = useQueryUserHook();
 
   const loginMutation = useMutationLoginHook();
 
@@ -48,15 +38,15 @@ export const Navigator = (): React.ReactElement => {
 
   useEffect(() => {
     const checkTokenExpiration = async () => {
-      const token = localStorage.getItem('accessToken');
-      const user = localStorage.getItem('user');
-      
+      const token = localStorage.getItem("accessToken");
+      const user = localStorage.getItem("user");
+
       if (!token || !user) {
         // 토큰이나 유저 정보가 없으면 로그아웃 상태로
         setUser(null);
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
-        localStorage.removeItem('user');
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("user");
         return;
       }
 
@@ -66,16 +56,17 @@ export const Navigator = (): React.ReactElement => {
         if (!response || response.error) {
           // API 요청 실패시 로그아웃 처리
           setUser(null);
-          localStorage.removeItem('accessToken');
-          localStorage.removeItem('refreshToken');
-          localStorage.removeItem('user');
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("refreshToken");
+          localStorage.removeItem("user");
         }
       } catch (error) {
+        console.error("Token validation error:", error);
         // 에러 발생시 로그아웃 처리
         setUser(null);
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
-        localStorage.removeItem('user');
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("user");
       }
     };
 
@@ -88,19 +79,19 @@ export const Navigator = (): React.ReactElement => {
       const result = await loginMutation.mutateAsync({ email, password });
 
       if (result.data?.accessToken) {
-        localStorage.setItem('accessToken', result.data.accessToken);
-        localStorage.setItem('refreshToken', result.data.refreshToken);
+        localStorage.setItem("accessToken", result.data.accessToken);
+        localStorage.setItem("refreshToken", result.data.refreshToken);
 
         const response = await refetch();
         if (response) {
           setUser(response.data);
-          localStorage.setItem('user', JSON.stringify(response.data));
+          localStorage.setItem("user", JSON.stringify(response.data));
           setIsLoginModalOpen(false);
-          navigate('/');
+          navigate("/");
         }
       }
     } catch (error) {
-      console.error('Login failed:', error);
+      console.error("Login failed:", error);
     } finally {
       setIsLoading(false);
     }
@@ -117,7 +108,7 @@ export const Navigator = (): React.ReactElement => {
           <S.ProfileWrapper onClick={() => setprofileDropdownMenu(!profileDropdownMenu)}>
             {user?.nickname}
             {/* <S.ProfileImage> */}
-              {/* <UserIcon size={24} /> */}
+            {/* <UserIcon size={24} /> */}
             {/* </S.ProfileImage> */}
             {/* {profileDropdownMenu ? '⌃' : '⌄'} */}
           </S.ProfileWrapper>
@@ -149,13 +140,13 @@ export const Navigator = (): React.ReactElement => {
     if (isNotificationOpen) setIsNotificationOpen(false);
   });
 
-  const handleLogoClick = () => navigate('/');
+  const handleLogoClick = () => navigate("/");
   const handleLoginClick = () => setIsLoginModalOpen(true);
   const handleCloseModal = () => setIsLoginModalOpen(false);
 
-  const handleSettingsClick = () => navigate('/settings');
-  const handleLoungeClick = () => navigate('/lounge');
-  const handleCaveClick = () => navigate('/cave');
+  const handleSettingsClick = () => navigate("/settings");
+  const handleLoungeClick = () => navigate("/lounge");
+  const handleCaveClick = () => navigate("/cave");
 
   const handleMessageClick = () => {
     setIsMessageOpen(!isMessageOpen);
@@ -222,12 +213,7 @@ export const Navigator = (): React.ReactElement => {
         </S.ContentWrapper>
       </S.Container>
 
-      <LoginModal
-        isOpen={isLoginModalOpen}
-        onClose={handleCloseModal}
-        onLogin={handleLocalLogin}
-        isLoading={isLoading}
-      />
+      <LoginModal isOpen={isLoginModalOpen} onClose={handleCloseModal} onLogin={handleLocalLogin} isLoading={isLoading} />
     </>
   );
 };

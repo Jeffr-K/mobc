@@ -1,56 +1,70 @@
 import { QueryKeys } from "@/features/lounge/api/querykeys";
 import { fetchCategories, fetchFeeds } from "@/features/lounge/api/api";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query"; // import 경로 변경
 import { Feed } from "@/features/lounge/model/feed.model";
 import { ApiResponse, Pagination } from "@/shared/utils/apiResponse";
 import { Category } from "@/features/lounge/model/category.model";
+import React from "react";
 
 export const useFeedsQueryHook = (props: { page?: number; size?: number; sort?: string; limit?: number }) => {
-  const { data, refetch, ...queryResults } = useQuery<ApiResponse<Feed[]>, Error>(QueryKeys.feeds.list, () => fetchFeeds({ ...props }), {
+  const { data, refetch, error, ...queryResults } = useQuery<ApiResponse<Feed[]>, Error>({
+    queryKey: QueryKeys.feeds.list,
+    queryFn: () => fetchFeeds({ ...props }),
     enabled: !!localStorage.getItem("accessToken"),
     retry: 1,
     staleTime: 1000 * 60 * 60 * 24,
-    cacheTime: 1000 * 60 * 60 * 24,
+    gcTime: 1000 * 60 * 60 * 24, // cacheTime → gcTime
     refetchOnMount: true,
     refetchOnWindowFocus: true,
-    onSuccess: data => {
-      console.log("Feeds fetched successfully:", data.data);
-      return data.data;
-    },
-    onError: error => {
-      console.error("Error fetching feeds:", error);
-    },
   });
+
+  // onSuccess 대체
+  React.useEffect(() => {
+    if (data?.data) {
+      console.log("Feeds fetched successfully:", data.data);
+    }
+  }, [data]);
+
+  // onError 대체
+  React.useEffect(() => {
+    if (error) {
+      console.error("Error fetching feeds:", error);
+    }
+  }, [error]);
 
   return { feeds: data?.data ?? [], refetch, ...queryResults };
 };
 
 export const useCategoriesQueryHook = () => {
-  const { data, refetch, ...queryResults } = useQuery<Pagination<Category>, Error>(
-    QueryKeys.categories,
-    () => {
-      return fetchCategories({ limit: 100 });
-    },
-    {
-      enabled: true,
-      retry: 1,
-      staleTime: 1000 * 60 * 60 * 24,
-      cacheTime: 1000 * 60 * 60 * 24,
-      refetchOnMount: true,
-      refetchOnWindowFocus: true,
-      onSuccess: data => {
-        console.log("API 응답 성공:", data);
-        console.log("Categories items:", data.items);
-      },
-      onError: error => {
-        console.error("Error fetching categories:", error);
-      },
-    },
-  );
+  const { data, refetch, error, ...queryResults } = useQuery<Pagination<Category>, Error>({
+    queryKey: QueryKeys.categories,
+    queryFn: () => fetchCategories({ limit: 100 }),
+    enabled: true,
+    retry: 1,
+    staleTime: 1000 * 60 * 60 * 24,
+    gcTime: 1000 * 60 * 60 * 24, // cacheTime → gcTime
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
+  });
+
+  // onSuccess 대체
+  React.useEffect(() => {
+    if (data) {
+      console.log("API 응답 성공:", data);
+      console.log("Categories items:", data.items);
+    }
+  }, [data]);
+
+  // onError 대체
+  React.useEffect(() => {
+    if (error) {
+      console.error("Error fetching categories:", error);
+    }
+  }, [error]);
 
   return {
     categories: data?.items ?? [],
-    pagination: data, // data.data가 아니라 data
+    pagination: data,
     refetch,
     ...queryResults,
   };

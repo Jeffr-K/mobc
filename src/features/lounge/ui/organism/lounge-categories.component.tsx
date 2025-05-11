@@ -1,67 +1,61 @@
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { ReactElement, useEffect } from "react";
 import { styled } from "styled-components";
-import { useCategoriesQueryHook } from "@/features/lounge/api/hooks";
+import {
+  categoriesLoadableAtom,
+  parentCategoriesAtom,
+  selectedCategoryAtom,
+  childCategoriesAtom,
+} from "@/features/lounge/adapter/category.adapter";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 
 export function LoungeCategories(): ReactElement {
-  const { categories, isLoading, error } = useCategoriesQueryHook();
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+  const [categoriesLoadable] = useAtom(categoriesLoadableAtom);
+  const parentCategories = useAtomValue(parentCategoriesAtom);
+  const childCategories = useAtomValue(childCategoriesAtom);
 
-  // 상위 카테고리만 필터링
-  const mainCategories = categories.filter(cat => cat.parent === null);
-
-  // 선택된 상위 카테고리의 하위 카테고리 필터링
-  const subCategories = selectedCategory
-    ? categories.filter(cat => {
-        // parent가 number 타입인 경우
-        if (typeof cat.parent === "number") {
-          return cat.parent === selectedCategory;
-        }
-        // parent가 Category 객체인 경우
-        if (cat.parent && typeof cat.parent === "object") {
-          return cat.parent._id === selectedCategory;
-        }
-        return false;
-      })
-    : [];
+  // selectedCategoryAtom을 읽기와 쓰기로 분리
+  const selectedCategory = useAtomValue(selectedCategoryAtom);
+  const setSelectedCategory = useSetAtom(selectedCategoryAtom);
 
   useEffect(() => {
-    console.log("cateogories", categories);
     // 카테고리가 로드되면 첫 번째 상위 카테고리를 자동 선택
-    if (mainCategories.length > 0 && !selectedCategory) {
-      setSelectedCategory(mainCategories[0]._id);
+    if (parentCategories.length > 0 && !selectedCategory) {
+      setSelectedCategory(parentCategories[0]._id);
     }
-  }, [categories, selectedCategory]);
+  }, [parentCategories, selectedCategory, setSelectedCategory]);
 
-  if (isLoading) {
+  // loadable 상태에 따른 렌더링
+  if (categoriesLoadable.state === "loading") {
     return <CategoryLeft>카테고리를 불러오는 중...</CategoryLeft>;
   }
 
-  if (error) {
+  if (categoriesLoadable.state === "hasError") {
     return <CategoryLeft>카테고리를 불러오는데 실패했습니다.</CategoryLeft>;
   }
 
   return (
     <CategoryLeft>
       <MainCategories>
-        {mainCategories.map(category => (
+        {parentCategories.map(parentCategory => (
           <MainCategoryButton
-            key={category.identifier.uuid}
-            selected={selectedCategory === category._id}
-            onClick={() => setSelectedCategory(category._id)}
+            key={parentCategory.identifier.uuid}
+            selected={selectedCategory === parentCategory._id}
+            onClick={() => setSelectedCategory(parentCategory._id)}
           >
-            {category.name}
+            {parentCategory.name}
           </MainCategoryButton>
         ))}
       </MainCategories>
       <SubCategories>
-        {subCategories.map(subCategory => (
-          <SubCategoryTag key={subCategory.identifier.uuid}>{subCategory.name}</SubCategoryTag>
+        {childCategories.map(childCategory => (
+          <SubCategoryTag key={childCategory.identifier.uuid}>{childCategory.name}</SubCategoryTag>
         ))}
       </SubCategories>
     </CategoryLeft>
   );
 }
 
+// 스타일 컴포넌트들은 그대로...
 export const CategoryLeft = styled.div`
   display: flex;
   flex-direction: column;

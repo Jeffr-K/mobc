@@ -1,50 +1,68 @@
-import { ApiResponse } from '@/shared/utils/apiResponse';
-import { useQuery, useMutation } from 'react-query';
+import { ApiResponse } from "@/shared/utils/apiResponse";
+import { useQuery, useMutation } from "@tanstack/react-query"; // import 경로 변경
+import React from "react";
 
-import { QueryKeys } from '../../user/lib/querykey/auth.query-keys';
-import { Session } from '../../user/model/auth.model';
-import { fetchLogin, fetchLogout, fetchSocialLogin } from '../../user/api/auth.api';
+import { QueryKeys } from "../../user/lib/querykey/auth.query-keys";
+import { Session } from "../../user/model/auth.model";
+import { fetchLogin, fetchLogout, fetchSocialLogin } from "../../user/api/auth.api";
 
 export const useMutationLoginHook = () => {
-  return useMutation<ApiResponse<Session>, Error, { email: string; password: string }>(
-    (credentials) => fetchLogin(credentials.email, credentials.password),
-    {
-      onSuccess: (data) => {
-        console.log('Login successful:', data);
-      },
-      onError: error => {
-        console.error('Error fetching @data:', error);
-      },
-    },
-  );
+  const mutation = useMutation<ApiResponse<Session>, Error, { email: string; password: string }>({
+    mutationFn: credentials => fetchLogin(credentials.email, credentials.password),
+  });
+
+  React.useEffect(() => {
+    if (mutation.isSuccess) {
+      console.log("Login successful:", mutation.data);
+    }
+  }, [mutation.isSuccess, mutation.data]);
+
+  React.useEffect(() => {
+    if (mutation.isError) {
+      console.error("Error fetching @data:", mutation.error);
+    }
+  }, [mutation.isError, mutation.error]);
+
+  return mutation;
 };
 
 export const useQuerySocialLoginHook = (provider: string) => {
-  return useQuery<ApiResponse<Session>, Error>(
-    QueryKeys.auth.socialLogin(provider),
-    () => fetchSocialLogin(provider),
-    {
-      enabled: false,
-      onError: error => {
-        console.error('Error fetching @data:', error);
-      },
-    },
-  );
+  const query = useQuery<ApiResponse<Session>, Error>({
+    queryKey: QueryKeys.auth.socialLogin(provider),
+    queryFn: () => fetchSocialLogin(provider),
+    enabled: false,
+  });
+
+  React.useEffect(() => {
+    if (query.error) {
+      console.error("Error fetching @data:", query.error);
+    }
+  }, [query.error]);
+
+  return query;
 };
 
 export const useMutationLogoutHook = () => {
-  return useMutation<any, Error, any>(
-    fetchLogout,
-    {
-      retry: 1,
-      onSuccess: () => {
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
-        localStorage.removeItem('user');
-      },
-      onError: error => {
-        console.error('Error fetching @data:', error);
-      },
+  const mutation = useMutation<any, Error, any>({
+    mutationFn: fetchLogout,
+    retry: 1,
+  });
+
+  // onSuccess 대체
+  React.useEffect(() => {
+    if (mutation.isSuccess) {
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("user");
     }
-  )
-}
+  }, [mutation.isSuccess]);
+
+  // onError 대체
+  React.useEffect(() => {
+    if (mutation.isError) {
+      console.error("Error fetching @data:", mutation.error);
+    }
+  }, [mutation.isError, mutation.error]);
+
+  return mutation;
+};

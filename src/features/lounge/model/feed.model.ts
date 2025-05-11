@@ -8,6 +8,10 @@ export interface FeedImage {
 
 export interface Feed {
   _id: number;
+  identifier: {
+    uuid: string;
+    version: number;
+  };
   category: Category;
   profile: Profile;
   author: {
@@ -23,4 +27,8 @@ export interface Feed {
   createdAt: string;
   shares: number;
   images?: FeedImage[];
+}
+
+export interface FeedId {
+  identifier: Pick<Feed["identifier"], "uuid">;
 }

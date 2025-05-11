@@ -1,6 +1,5 @@
-import { atom, useAtom } from 'jotai';
-import { Activity, Analytics, Experience, Garage, Profile } from '../model/profile.model';
-
+import { atom, useAtom } from "jotai";
+import { Activity, Analytics, Experience, Garage, Profile } from "../model/profile.model";
 
 export const analyticsAtom = atom({
   totalViews: 0,
@@ -18,9 +17,7 @@ export const useAnalyticsStore = () => {
   };
 };
 
-export const profileAtom = atom<Profile | null>(null) as unknown as ReturnType<
-  typeof atom<Profile | null>
->;
+export const profileAtom = atom<Profile | null>(null) as unknown as ReturnType<typeof atom<Profile | null>>;
 
 export const useProfileStore = () => {
   const [profile, setProfile] = useAtom(profileAtom);
@@ -55,7 +52,7 @@ export const garageAtom = atom<Garage[] | null>(null) as unknown as ReturnType<t
 export const useProfileGarageStore = () => {
   const [garages, setGarages] = useAtom(garageAtom);
 
-  return {  
+  return {
     garages,
     setGarages: (data: Garage[]) => setGarages(data),
   };

@@ -1,40 +1,40 @@
-import { useQuery } from 'react-query';
-import { QueryKeys } from '../lib/querykey/user.query-keys';
-import { fetchUser } from '../api/user.api';
+import { useQuery } from "@tanstack/react-query";
+import { QueryKeys } from "../lib/querykey/user.query-keys";
+import { fetchUser } from "../api/user.api";
+import { useEffect } from "react";
 
 export const useQueryUserHook = () => {
-  // const location = useLocation();
-  // const isRegistrationPage = location.pathname === '/registration';
+  const { data, refetch, error, ...queryResults } = useQuery<any, Error>({
+    queryKey: QueryKeys.user.me,
+    queryFn: fetchUser,
+    enabled: !!localStorage.getItem("accessToken"),
+    retry: 1,
+    staleTime: Infinity,
+    gcTime: Infinity,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
+  });
 
-  const { data, refetch, ...queryResults } = useQuery<any, Error>(
-    QueryKeys.user.me,
-    fetchUser,
-    {
-      enabled: !!localStorage.getItem('accessToken'),
-      retry: 1,
-      staleTime: Infinity,
-      cacheTime: Infinity,
-      refetchOnMount: true,
-      refetchOnWindowFocus: true,
-      onSuccess: (data) => {
-        if (data?.data) {
-          localStorage.setItem('user', JSON.stringify(data.data));
-        }
-      },
-      onError: (error) => {
-        if (error.message.includes('401')) {
-          localStorage.removeItem('accessToken');
-          localStorage.removeItem('user');
-        }
-        console.error('Error fetching user:', error);
-      }
+  useEffect(() => {
+    if (data?.data) {
+      localStorage.setItem("user", JSON.stringify(data.data));
     }
-  );
+  }, [data]);
 
-  const cachedUserData = localStorage.getItem('user');
-  return { 
+  useEffect(() => {
+    if (error) {
+      if (error.message.includes("401")) {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("user");
+      }
+      console.error("Error fetching user:", error);
+    }
+  }, [error]);
+
+  const cachedUserData = localStorage.getItem("user");
+  return {
     userData: data?.data || (cachedUserData ? JSON.parse(cachedUserData) : null),
     refetch,
-    ...queryResults
+    ...queryResults,
   };
 };

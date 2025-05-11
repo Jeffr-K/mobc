@@ -1,6 +1,4 @@
-// atoms.ts
-import { atom } from 'jotai';
-import type { User } from './user.types';
+import { atom } from "jotai";
+import { User } from "@/entities/user/model/user.model";
 
-// primitiveAtom 사용
 export const userAtom = atom<User | null>(null) as unknown as ReturnType<typeof atom<User | null>>;

@@ -1,117 +1,154 @@
-import { useQuery } from 'react-query';
+import { useQuery } from "@tanstack/react-query";
+import React from "react";
 
-import { ApiResponse } from '@/shared/utils/apiResponse';
-import { QueryKeys } from '../lib/querykey/profile.query-keys';
-import { useAnalyticsStore, useProfileActivitiesStore, useProfileExperiencesStore, useProfileGarageStore, useProfileStore } from '../adapter/profile.atoms';
-import { fetchAnalytics, fetchExperiences, fetchProfile, fetchProfileActivities, fetchProfileGarages, fetchProfilePersona } from '../api/profile.api';
-import { Activity, Analytics, Experience, Garage, Persona, Profile } from '../model/profile.model';
-
+import { ApiResponse } from "@/shared/utils/apiResponse";
+import { QueryKeys } from "../lib/querykey/profile.query-keys";
+import { useAnalyticsStore, useProfileActivitiesStore, useProfileExperiencesStore, useProfileGarageStore } from "../adapter/profile.atoms";
+import {
+  fetchAnalytics,
+  fetchExperiences,
+  fetchProfile,
+  fetchProfileActivities,
+  fetchProfileGarages,
+  fetchProfilePersona,
+} from "../api/profile.api";
+import { Activity, Analytics, Experience, Garage, Persona, Profile } from "../model/profile.model";
 
 export const useAnalyticsHook = (filters: { userId?: number }) => {
   const { setAnalytics } = useAnalyticsStore();
 
-  return useQuery<ApiResponse<Analytics>, Error, Analytics>(
-    QueryKeys.analytics.detail(filters.userId),
-    () => fetchAnalytics(filters.userId),
-    {
-      enabled: false,
-      retry: 1,
-      staleTime: 1000 * 60 * 5,
-      cacheTime: 1000 * 60 * 30,
-      select: (data: ApiResponse<Analytics>): Analytics => {
-        return data.data;
-      },
-      onSuccess: (data: Analytics): void => {
-        setAnalytics(data);
-      },
-      onError: error => {
-        console.error('Error fetching @data:', error);
-      },
+  const query = useQuery<ApiResponse<Analytics>, Error, Analytics>({
+    queryKey: QueryKeys.analytics.detail(filters.userId),
+    queryFn: () => fetchAnalytics(filters.userId),
+    enabled: false,
+    retry: 1,
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 30, // v5에서 cacheTime이 gcTime으로 변경
+    select: (data: ApiResponse<Analytics>): Analytics => {
+      return data.data;
     },
-  );
+  });
+
+  React.useEffect(() => {
+    if (query.data) {
+      setAnalytics(query.data);
+    }
+  }, [query.data, setAnalytics]);
+
+  React.useEffect(() => {
+    if (query.error) {
+      console.error("Error fetching @data:", query.error);
+    }
+  }, [query.error]);
+
+  return query;
 };
 
 export const useQueryProfileHook = () => {
-  return useQuery<ApiResponse<Profile>, Error, Profile>(
-    QueryKeys.profile.me,
-    fetchProfile,
-    {
-      enabled: !!localStorage.getItem('accessToken'),
-      select: (response: ApiResponse<Profile>): Profile => response.data,
-      onError: error => {
-        console.error('Error fetching profile:', error);
-      },
-    },
-  );
+  const query = useQuery<ApiResponse<Profile>, Error, Profile>({
+    queryKey: QueryKeys.profile.me,
+    queryFn: fetchProfile,
+    enabled: !!localStorage.getItem("accessToken"),
+    select: (response: ApiResponse<Profile>): Profile => response.data,
+  });
+
+  React.useEffect(() => {
+    if (query.error) {
+      console.error("Error fetching profile:", query.error);
+    }
+  }, [query.error]);
+
+  return query;
 };
 
 export const useQueryProfilePersonaHook = () => {
-  return useQuery<ApiResponse<Persona>, Error, Persona>(
-    QueryKeys.profile.persona,
-    fetchProfilePersona,
-    {
-      enabled: !!localStorage.getItem('accessToken'),
-      select: (response: ApiResponse<Persona>): Persona => response.data,
-      onError: error => {
-        console.error('Error fetching persona:', error);
-      },
-    },
-  );
-}
+  const query = useQuery<ApiResponse<Persona>, Error, Persona>({
+    queryKey: QueryKeys.profile.persona,
+    queryFn: fetchProfilePersona,
+    enabled: !!localStorage.getItem("accessToken"),
+    select: (response: ApiResponse<Persona>): Persona => response.data,
+  });
+
+  React.useEffect(() => {
+    if (query.error) {
+      console.error("Error fetching persona:", query.error);
+    }
+  }, [query.error]);
+
+  return query;
+};
 
 export const useQueryProfileExperiencesHook = () => {
   const { setExperiences } = useProfileExperiencesStore();
 
-  return useQuery<ApiResponse<Experience[]>, Error, Experience[]>(
-    QueryKeys.profile.experiences,
-    fetchExperiences,
-    {
-      enabled: !!localStorage.getItem('accessToken'),
-      select: (response: ApiResponse<Experience[]>): Experience[] => response.data,
-      onSuccess: (data: Experience[]) => {
-        setExperiences(data);
-      },
-      onError: error => {
-        console.error('Error fetching experiences:', error);
-      },
-    },
-  );
-}
+  const query = useQuery<ApiResponse<Experience[]>, Error, Experience[]>({
+    queryKey: QueryKeys.profile.experiences,
+    queryFn: fetchExperiences,
+    enabled: !!localStorage.getItem("accessToken"),
+    select: (response: ApiResponse<Experience[]>): Experience[] => response.data,
+  });
+
+  React.useEffect(() => {
+    if (query.data) {
+      setExperiences(query.data);
+    }
+  }, [query.data, setExperiences]);
+
+  React.useEffect(() => {
+    if (query.error) {
+      console.error("Error fetching experiences:", query.error);
+    }
+  }, [query.error]);
+
+  return query;
+};
 
 export const useQueryProfileActivitiesHook = () => {
   const { setActivities } = useProfileActivitiesStore();
 
-  return useQuery<ApiResponse<Activity[]>, Error, Activity[]>(
-    QueryKeys.profile.activities,
-    fetchProfileActivities,
-    {
-      enabled: !!localStorage.getItem('accessToken'),
-      select: (response: ApiResponse<Activity[]>): Activity[] => response.data,
-      onSuccess: (data: Activity[]) => {
-        setActivities(data);
-      },
-      onError: error => {
-        console.error('Error fetching activities:', error);
-      },
-    },
-  );
-}
+  const query = useQuery<ApiResponse<Activity[]>, Error, Activity[]>({
+    queryKey: QueryKeys.profile.activities,
+    queryFn: fetchProfileActivities,
+    enabled: !!localStorage.getItem("accessToken"),
+    select: (response: ApiResponse<Activity[]>): Activity[] => response.data,
+  });
+
+  React.useEffect(() => {
+    if (query.data) {
+      setActivities(query.data);
+    }
+  }, [query.data, setActivities]);
+
+  React.useEffect(() => {
+    if (query.error) {
+      console.error("Error fetching activities:", query.error);
+    }
+  }, [query.error]);
+
+  return query;
+};
 
 export const useQueryProfileGaragesHook = () => {
   const { setGarages } = useProfileGarageStore();
 
-  return useQuery<ApiResponse<Garage[]>, Error, Garage[]>(
-  QueryKeys.profile.garages,
-  fetchProfileGarages,
-  {
-    enabled: !!localStorage.getItem('accessToken'),
+  const query = useQuery<ApiResponse<Garage[]>, Error, Garage[]>({
+    queryKey: QueryKeys.profile.garages,
+    queryFn: fetchProfileGarages,
+    enabled: !!localStorage.getItem("accessToken"),
     select: (response: ApiResponse<Garage[]>): Garage[] => response.data,
-    onSuccess: (data: Garage[]) => {
-      setGarages(data);
-    },
-    onError: error => {
-        console.error('Error fetching garage:', error);
-      },
-    },
-  );
-}
+  });
+
+  React.useEffect(() => {
+    if (query.data) {
+      setGarages(query.data);
+    }
+  }, [query.data, setGarages]);
+
+  React.useEffect(() => {
+    if (query.error) {
+      console.error("Error fetching garage:", query.error);
+    }
+  }, [query.error]);
+
+  return query;
+};
