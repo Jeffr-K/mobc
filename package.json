@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "vite",
+    "start:dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
     "lint": "eslint \"./src/**/*.{js,jsx,ts,tsx}\"",

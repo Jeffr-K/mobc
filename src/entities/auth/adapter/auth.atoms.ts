@@ -1,5 +1,5 @@
+import { Session } from "@/entities/user/model/auth.model";
 import { atom, useAtom } from "jotai";
-import { Session } from "../entities/auth.entity";
 
 export const sessionAtom = atom<Session | null>(null);
 

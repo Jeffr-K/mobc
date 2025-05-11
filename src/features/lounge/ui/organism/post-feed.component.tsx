@@ -16,24 +16,26 @@ import {
   PostText,
   SubCategory,
 } from "../x/styles";
+import { ReactElement } from "react";
+import { Feed } from "@/features/lounge/model/feed.model";
 
 export function Feeds({
   feeds,
   selectedFeedId,
   onFeedSelect,
-}: {
-  feeds: any;
+}: Readonly<{
+  feeds: Feed[];
   selectedFeedId: number | null;
   onFeedSelect: (id: number) => void;
-}) {
+}>): ReactElement {
   if (!feeds || !Array.isArray(feeds)) {
     return null;
   }
 
   return (
     <FeedContainer>
-      {feeds.map((feed: any) => (
-        <PostCard key={feed._id ?? feed.id} isSelected={feed.id === selectedFeedId} onClick={() => onFeedSelect(feed.id)}>
+      {feeds.map((feed: Feed) => (
+        <PostCard key={feed._id} isSelected={feed._id === selectedFeedId} onClick={() => onFeedSelect(feed._id)}>
           <PostContent>
             <PostHeader>
               <ActionButton isMoreButton>
@@ -41,13 +43,14 @@ export function Feeds({
               </ActionButton>
             </PostHeader>
             <CategoryWrapper>
-              <Category>{feed.category}</Category>
-              <SubCategory>{feed.subCategory}</SubCategory>
+              <Category>{feed.category.name}</Category>
+              {Array.isArray(feed.category.subCategories) &&
+                feed.category.subCategories.map(subCategory => <SubCategory key={subCategory._id}>{subCategory.name}</SubCategory>)}
             </CategoryWrapper>
             <AuthorInfo>
-              <Avatar src={feed.author?.avatar || "https://via.placeholder.com/32"} alt={feed.author?.name || "User"} />
+              <Avatar src={feed.author?.avatar ?? "https://via.placeholder.com/32"} alt={feed.author?.name ?? "User"} />
               <AuthorMeta>
-                <AuthorName>{feed.author?.name || "Anonymous"}</AuthorName>
+                <AuthorName>{feed.author?.name ?? "Anonymous"}</AuthorName>
                 <AuthorTitle>
                   {feed.author?.title}
                   <span style={{ margin: "0 4px" }}>·</span>

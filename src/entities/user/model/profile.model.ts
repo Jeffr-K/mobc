@@ -81,7 +81,6 @@ export interface Activity {
   deletedAt: string | null;
 }
 
-
 export interface Garage {
   id: string;
   title: string;
@@ -101,7 +100,7 @@ export interface Garage {
 }
 
 export interface Profile {
-  id: string;
+  _id: string;
   avatar: string;
   persona: Persona;
   skill: Skill;

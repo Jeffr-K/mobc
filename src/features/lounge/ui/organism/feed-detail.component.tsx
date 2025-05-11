@@ -35,18 +35,17 @@ import {
   ReviewContent,
   ReviewDate,
   ReviewHeader,
-  ReviewInput,
   ReviewItem,
   ReviewList,
   ReviewSection,
   ReviewSortButton,
-  ReviewTextField,
   ReviewTitle,
 } from "../x/styles";
 import { Eye, Heart, MessageCircle, MoreHorizontal } from "lucide-react";
 import { FaChevronDown } from "react-icons/fa";
+import { CommentWriter } from "@/features/lounge/ui/molecule/comment-writer.input";
 
-export function Feed({ feed }: { feed: any }) {
+export function Feed({ feed }: any) {
   const [replyingTo, setReplyingTo] = useState<number | null>(null); // 답글 다는 댓글의 ID
 
   if (!feed) return null;
@@ -79,13 +78,20 @@ export function Feed({ feed }: { feed: any }) {
   return (
     <DetailContainer>
       <DetailHeader>
+        {/* TODO: 피드 상세 우상단에 더보기 아이콘; 이것은 권한에 따라 신고하기 | 차단하기 | 삭제하기 | 수정하기 등이 될 수 있음.*/}
         <DetailMoreButton>
           <MoreHorizontal size={16} />
         </DetailMoreButton>
+
+        {/* 피드의 카테고리와 서브 카테고리 */}
         <DetailCategoryWrapper>
-          <DetailCategory>{feed.category}</DetailCategory>
-          <DetailSubCategory>{feed.subCategory}</DetailSubCategory>
+          <DetailCategory>{feed.category && typeof feed.category === "object" ? feed.category.name : "카테고리"}</DetailCategory>
+          {feed.category &&
+            feed.category.subCategories &&
+            feed.category.subCategories.length > 0 &&
+            feed.category.subCategories.map(subCategory => <DetailSubCategory key={subCategory._id}>{subCategory.name}</DetailSubCategory>)}
         </DetailCategoryWrapper>
+
         <DetailProfileSection>
           <DetailProfileWrapper>
             <DetailProfileBasic>
@@ -100,6 +106,8 @@ export function Feed({ feed }: { feed: any }) {
               </DetailProfileInfo>
             </DetailProfileBasic>
           </DetailProfileWrapper>
+
+          {/* TODO: 팔로워 버튼 */}
           <DetailFollowButton>Follow</DetailFollowButton>
         </DetailProfileSection>
         <DetailMetaSection>
@@ -121,15 +129,21 @@ export function Feed({ feed }: { feed: any }) {
         </DetailMetaSection>
       </DetailHeader>
 
+      {/* 컨텐츠 영역 + 리뷰 영역 */}
       <DetailContent>
         <DetailText>{feed.content}</DetailText>
+
+        {/* TODO: 리뷰 컨테이너 */}
         <ReviewSection>
+          {/* 댓글 개수 && 정렬 필터 */}
           <ReviewHeader>
             <ReviewTitle>댓글 {dummyReviews.length}</ReviewTitle>
             <ReviewSortButton>
               최신순 <FaChevronDown size={10} />
             </ReviewSortButton>
           </ReviewHeader>
+
+          {/* 댓글 리스트 */}
           <ReviewList>
             {dummyReviews.map(review => (
               <ReviewItem key={review.id}>
@@ -167,10 +181,9 @@ export function Feed({ feed }: { feed: any }) {
               </ReviewItem>
             ))}
           </ReviewList>
-          <ReviewInput>
-            <ReviewAvatar src="https://avatars.githubusercontent.com/u/12345678" alt="User" />
-            <ReviewTextField placeholder="댓글을 입력하세요..." />
-          </ReviewInput>
+
+          {/* 댓글 작성 */}
+          <CommentWriter />
         </ReviewSection>
       </DetailContent>
     </DetailContainer>
