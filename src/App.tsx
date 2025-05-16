@@ -21,6 +21,7 @@ import { OrganizationRegistrationPage } from "./pages/organization/organization-
 import { TalentPoolPage } from "./pages/organization/talent-pool";
 import { CavePage } from "./pages/cave/cave";
 import { CaveDetailPage } from "./pages/cave/cave-detail";
+import { LoginModal } from "@/shared/atomic/organisms/@modal/@login";
 
 const queryClient = new QueryClient();
 
@@ -48,6 +49,7 @@ function App() {
               <Route path="/talent-pool" element={<TalentPoolPage />} />
             </Route>
           </Routes>
+          <LoginModal />
         </ThemeProvider>
       </QueryClientProvider>
     </BrowserRouter>

@@ -32,7 +32,6 @@ export function FeedWriteModal({
   const titleInputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // 선택된 상위 카테고리의 하위 카테고리들
   const subCategories = selectedParentCategory ? getSubCategories(Number(selectedParentCategory)) : [];
 
   useEffect(() => {

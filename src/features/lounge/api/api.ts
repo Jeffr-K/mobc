@@ -9,7 +9,10 @@ export const fetchFeeds = async (params: { page?: number; size?: number; sort?: 
   return response.data;
 };
 
-// 단일 피드 조회
+/**
+ * 피드 상세 조회
+ * @param params
+ */
 export const fetchFeed = async (params: { feedUuid: string }): Promise<ApiResponse<Feed>> => {
   const response = await fetcher.get<ApiResponse<Feed>>("/v1/feed", { params });
   return response.data;
@@ -20,25 +23,32 @@ export const fetchFeed = async (params: { feedUuid: string }): Promise<ApiRespon
  * @param formData
  * @returns feedUUID
  */
-export const fetchCreateFeed = async (formData: FormData): Promise<ApiResponse<FeedId>> => {
+export const fetchCreateFeed = async (formData: FormData, accessToken: string): Promise<ApiResponse<FeedId>> => {
   const response = await fetcher.post<ApiResponse<FeedId>>("/v1/feeds", formData, {
     headers: {
-      "Content-Type": undefined, // 이렇게 하면 axios가 자동으로 Content-Type을 설정함
+      Authorization: `Bearer ${accessToken}`,
     },
   });
   return response.data;
 };
 
-// 파일 업로드
-export const fetchUploadFile = async (formData: FormData): Promise<ApiResponse<{ fileUrl: string }>> => {
+/**
+ * 파일 업로드
+ * @param formData
+ */
+export const fetchUploadFile = async (formData: FormData, accessToken: string): Promise<ApiResponse<{ fileUrl: string }>> => {
   const response = await fetcher.post<ApiResponse<{ fileUrl: string }>>("/v1/feeds/upload", formData, {
     headers: {
-      "Content-Type": undefined, // 이렇게 하면 axios가 자동으로 Content-Type을 설정함
+      Authorization: `Bearer ${accessToken}`,
     },
   });
   return response.data;
 };
 
+/**
+ * 카테고리 목록 조회
+ * @param params
+ */
 export const fetchCategories = async (params?: { limit?: number; page?: number }): Promise<Pagination<Category>> => {
   try {
     const response = await fetcher.get<Pagination<Category>>("/v1/categories", {

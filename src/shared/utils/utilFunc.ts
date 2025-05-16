@@ -29,3 +29,15 @@ export const isNullish = (value: unknown): value is null | undefined => {
 export const shouldSkip = (value: unknown): boolean => {
   return value === null || value === undefined;
 };
+
+/**
+ * Checks if a value is a unknown value.
+ * @param value
+ * @param callback
+ */
+export const isEmpty = (value: unknown, callback?: () => any): any => {
+  if (value === null || value === undefined || value === "") {
+    return callback ? callback() : undefined;
+  }
+  return value;
+};

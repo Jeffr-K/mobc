@@ -1,13 +1,17 @@
 import { ReactNode, ReactElement } from "react";
 import { FileText } from "lucide-react";
 import { styled } from "styled-components";
+import { of, pipe } from "rxjs";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useNavigate } from "react-router-dom";
 import { feedWriteModalAtom } from "@/shared/atomic/organisms/@modal/@feed/atoms";
 import { FeedWriteModal } from "@/shared/atomic/organisms/@modal/@feed/feed-write.modal";
 import { parentCategoriesAtom, categoriesListAtom, selectedCategoryAtom } from "@/features/lounge/adapter/category.adapter";
 import { useMutationFeedRegisterHook, useMutationUploadFileHook } from "@/features/lounge/api/feed/feed.mutation.hook";
+import { feedRegisterEventHandler as handler } from "@/features/lounge/service/feed.service";
 import { useFormData } from "@/shared/hooks/withForm";
+import { useLoginModalHook } from "@/entities/auth/hook/useLoginModalHook";
+import { authService } from "@/entities/auth/service/auth.service";
 
 interface FeedWriterButtonProps {
   children: ReactNode;
@@ -17,25 +21,27 @@ type FeedFormData = {
   title: string;
   content: string;
   categoryUuid: string;
-  subCategoryUuid?: string;
-  imageUrls?: string[];
+  images?: string[];
 };
 
 export function FeedWriterButton({ children }: Readonly<FeedWriterButtonProps>): ReactElement {
+  const navigate = useNavigate();
+
   const [isModalOpen, setIsModalOpen] = useAtom(feedWriteModalAtom);
   const parentCategories = useAtomValue(parentCategoriesAtom);
   const allCategories = useAtomValue(categoriesListAtom);
   const setSelectedCategory = useSetAtom(selectedCategoryAtom);
-  const navigate = useNavigate();
 
   const { createFormData } = useFormData<FeedFormData>();
+  const { createFormData: createFileFormData } = useFormData<{ file: File }>();
 
-  // Mutations
   const feedRegisterMutation = useMutationFeedRegisterHook();
-  const uploadFileMutation = useMutationUploadFileHook();
+  const { mutation: uploadFileMutation } = useMutationUploadFileHook();
+  const { openLoginModal } = useLoginModalHook();
 
   const getSubCategories = (parentId: number) => {
     return allCategories.filter(cat => {
+      console.log("cat", cat);
       if (typeof cat.parent === "number") {
         return cat.parent === parentId;
       }
@@ -46,6 +52,15 @@ export function FeedWriterButton({ children }: Readonly<FeedWriterButtonProps>):
     });
   };
 
+  const pipeline = pipe(
+    handler.checkAccessToken(authService, openLoginModal),
+    handler.continueIfValidToken(),
+    handler.uploadFiles(createFileFormData, uploadFileMutation),
+    handler.registerFeed(createFormData, feedRegisterMutation),
+    handler.handleSuccess(setIsModalOpen, navigate),
+    handler.handleError(),
+  );
+
   const handleWriteEventSubmit = async (
     title: string,
     content: string,
@@ -53,61 +68,7 @@ export function FeedWriterButton({ children }: Readonly<FeedWriterButtonProps>):
     subCategoryId?: string,
     files?: File[],
   ) => {
-    try {
-      let uploadedFileUrls: string[] = [];
-
-      // 1. 파일 업로드 (있는 경우)
-      if (files && files.length > 0) {
-        const uploadPromises = files.map(async file => {
-          const fileFormData = new FormData();
-          fileFormData.append("file", file);
-
-          const uploadResult = await uploadFileMutation.mutateAsync(fileFormData);
-          return uploadResult.data.fileUrl;
-        });
-
-        uploadedFileUrls = await Promise.all(uploadPromises);
-      }
-
-      // 2. 피드 생성
-      const feedFormData = createFormData({
-        title,
-        content,
-        categoryUuid: parentCategoryId,
-        subCategoryUuid: subCategoryId,
-        imageUrls: uploadedFileUrls,
-      });
-
-      if (subCategoryId) {
-        feedFormData.append("subCategoryUuid", subCategoryId);
-      }
-
-      // 업로드된 파일 URL들을 추가
-      uploadedFileUrls.forEach((url, index) => {
-        feedFormData.append(`imageUrls[${index}]`, url);
-      });
-
-      console.log("피드 작성 요청:", {
-        title,
-        content,
-        parentCategoryId,
-        subCategoryId,
-        uploadedFileUrls,
-      });
-
-      const result = await feedRegisterMutation.mutateAsync(feedFormData);
-
-      console.log("피드 작성 성공:", result);
-      setIsModalOpen(false);
-
-      // 3. 생성된 피드로 이동 (옵션)
-      if (result.data?.identifier?.uuid) {
-        navigate(`/lounge/feed/${result.data.identifier.uuid}`);
-      }
-    } catch (error) {
-      console.error("피드 작성 실패:", error);
-      alert("피드 작성에 실패했습니다. 다시 시도해주세요.");
-    }
+    of({ title, content, parentCategoryId, subCategoryId, files }).pipe(pipeline).subscribe();
   };
 
   const handleModalClose = () => {
@@ -115,12 +76,9 @@ export function FeedWriterButton({ children }: Readonly<FeedWriterButtonProps>):
     setSelectedCategory(null);
   };
 
-  // 버튼 비활성화 조건: 파일 업로드 중이거나 피드 생성 중일 때
-  const isButtonDisabled = uploadFileMutation.isPending || feedRegisterMutation.isPending;
-
   return (
     <>
-      <WriteButton onClick={() => setIsModalOpen(true)} disabled={isButtonDisabled}>
+      <WriteButton onClick={() => setIsModalOpen(true)} disabled={uploadFileMutation.isPending || feedRegisterMutation.isPending}>
         <FileText size={16} />
         {children}
       </WriteButton>
@@ -133,9 +91,11 @@ export function FeedWriterButton({ children }: Readonly<FeedWriterButtonProps>):
         allCategories={allCategories}
         getSubCategories={getSubCategories}
         isSubmitting={uploadFileMutation.isPending || feedRegisterMutation.isPending}
-        submitButtonText={
-          uploadFileMutation.isPending ? "파일 업로드 중..." : feedRegisterMutation.isPending ? "피드 작성 중..." : "작성하기"
-        }
+        submitButtonText={(() => {
+          if (uploadFileMutation.isPending) return "파일 업로드 중...";
+          if (feedRegisterMutation.isPending) return "피드 작성 중...";
+          return "작성하기";
+        })()}
       />
     </>
   );

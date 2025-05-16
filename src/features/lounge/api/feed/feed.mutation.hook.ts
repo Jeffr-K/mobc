@@ -1,12 +1,19 @@
+import { useEffect } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { ApiResponse } from "@/shared/utils/apiResponse";
 import { Feed, FeedId } from "@/features/lounge/model/feed.model";
-import { useEffect } from "react";
 import { fetchCreateFeed, fetchFeed, fetchUploadFile } from "@/features/lounge/api/api";
+import { authService } from "@/entities/auth/service/auth.service";
 
 export const useMutationFeedRegisterHook = () => {
   const mutation = useMutation<ApiResponse<FeedId>, Error, FormData>({
-    mutationFn: formData => fetchCreateFeed(formData),
+    mutationFn: formData => {
+      const accessToken = authService.getAccessToken();
+      if (!accessToken) {
+        throw new Error("인증이 필요합니다. 로그인 후 이용해주세요.");
+      }
+      return fetchCreateFeed(formData, accessToken);
+    },
   });
 
   useEffect(() => {
@@ -26,7 +33,13 @@ export const useMutationFeedRegisterHook = () => {
 
 export const useMutationUploadFileHook = () => {
   const mutation = useMutation<ApiResponse<{ fileUrl: string }>, Error, FormData>({
-    mutationFn: formData => fetchUploadFile(formData),
+    mutationFn: formData => {
+      const accessToken = authService.getAccessToken();
+      if (!accessToken) {
+        throw new Error("인증이 필요합니다. 로그인 후 이용해주세요.");
+      }
+      return fetchUploadFile(formData, accessToken);
+    },
   });
 
   useEffect(() => {
@@ -41,7 +54,7 @@ export const useMutationUploadFileHook = () => {
     }
   }, [mutation.isError, mutation.error]);
 
-  return mutation;
+  return { mutation };
 };
 
 export const useQueryFeedHook = (feedUuid: string) => {

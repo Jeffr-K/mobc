@@ -16,7 +16,7 @@ function useLocalStorage<T = any>(key: string, initialValue: T): [T, (value: T) 
       console.error(error);
       return initialValue;
     }
-  })
+  });
 
   const setValue = (value: T) => {
     try {
@@ -26,7 +26,7 @@ function useLocalStorage<T = any>(key: string, initialValue: T): [T, (value: T) 
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   return [storedValue, setValue];
 }
