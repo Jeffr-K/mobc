@@ -2,9 +2,9 @@ import { ApiResponse } from "@/shared/utils/apiResponse";
 import { useQuery, useMutation } from "@tanstack/react-query"; // import 경로 변경
 import React from "react";
 
-import { QueryKeys } from "../../user/lib/querykey/auth.query-keys";
-import { Session } from "../../user/model/auth.model";
-import { fetchLogin, fetchLogout, fetchSocialLogin } from "../../user/api/auth.api";
+import { QueryKeys } from "@/features/user/infrastructure/adapter/querykey/auth.query-keys";
+import { Session } from "@/features/user/core/model/auth.model";
+import { fetchLogin, fetchLogout, fetchSocialLogin } from "@/features/user/infrastructure/adapter/api/auth.api";
 
 export const useMutationLoginHook = () => {
   const mutation = useMutation<ApiResponse<Session>, Error, { email: string; password: string }>({

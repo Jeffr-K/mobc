@@ -39,6 +39,7 @@ export const ExperienceCard = styled.div`
  border-radius: ${({ theme }) => theme.borderRadius.md};
  background-color: ${({ theme }) => theme.colors.gray50};
  transition: transform 0.2s ease;
+ border: 1px solid black;
  
  &:hover {
    transform: translateY(-4px);

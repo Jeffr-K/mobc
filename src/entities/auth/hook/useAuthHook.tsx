@@ -3,8 +3,8 @@ import { useSetAtom } from "jotai";
 import { useNavigate } from "react-router-dom";
 import { loginModalOpenAtom, loginLoadingAtom } from "@/entities/auth/hook/useLoginModalHook";
 import { useMutationLoginHook } from "@/entities/auth/interface/auth.hooks";
-import { useQueryUserHook } from "@/entities/user/interface/user.hooks";
-import { userAtom } from "@/entities/user/adapter/user.atoms";
+import { useQueryUserHook } from "@/features/user/core/hooks/user.hooks";
+import { userAtom } from "@/features/user/infrastructure/atoms/user.atoms";
 
 /**
  * 인증 관련 로직을 담당하는 커스텀 훅

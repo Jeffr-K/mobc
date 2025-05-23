@@ -1,4 +1,5 @@
 .idea
+.cursor/*
 
 # dependencies
 /node_modules

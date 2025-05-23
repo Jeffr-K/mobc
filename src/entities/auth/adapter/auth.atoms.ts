@@ -1,4 +1,4 @@
-import { Session } from "@/entities/user/model/auth.model";
+import { Session } from "@/features/user/core/model/auth.model";
 import { atom, useAtom } from "jotai";
 
 export const sessionAtom = atom<Session | null>(null);

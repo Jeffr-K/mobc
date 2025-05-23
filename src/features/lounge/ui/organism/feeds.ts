@@ -1,7 +1,7 @@
-import { Feed, FeedImage } from "@/features/lounge/model/feed.model";
-import { Category } from "@/features/lounge/model/category.model";
-import { Profile } from "@/entities/user/model/profile.model";
-import { User, Agreement } from "@/entities/user/model/user.model";
+import { Feed, FeedImage } from "@/features/lounge/infrastructure/model/feed.model";
+import { Category } from "@/features/lounge/infrastructure/model/category.model";
+import { Profile } from "@/features/user/core/model/profile.model";
+import { User, Agreement } from "@/features/user/core/model/user.model";
 
 // 카테고리 더미 데이터
 const categories: Category[] = [

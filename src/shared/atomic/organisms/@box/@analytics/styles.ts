@@ -5,6 +5,7 @@ export const Container = styled.div`
   border-radius: ${props => props.theme.borderRadius.md};
   padding: ${props => props.theme.spacing.md};
   box-shadow: ${props => props.theme.shadow.sm};
+  border: 1px solid black;
 `;
 
 export const Title = styled.h2`

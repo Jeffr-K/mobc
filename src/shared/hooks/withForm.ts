@@ -20,6 +20,9 @@ export const useFormData = <T extends Record<string, unknown>>() => {
       const fieldKey = `${key}[${index}]`;
       if (item instanceof File || item instanceof Blob) {
         formData.append(fieldKey, item);
+      } else if (typeof item === "string") {
+        // 문자열은 직접 추가 (stringify 없이)
+        formData.append(fieldKey, item);
       } else {
         formData.append(fieldKey, JSON.stringify(item));
       }
@@ -43,6 +46,8 @@ export const useFormData = <T extends Record<string, unknown>>() => {
       } else if (value instanceof FileList) {
         appendFileListToFormData(formData, key, value);
       } else if (value instanceof File || value instanceof Blob) {
+        formData.append(key, value);
+      } else if (typeof value === "string") {
         formData.append(key, value);
       } else {
         formData.append(key, JSON.stringify(value));

@@ -1,17 +1,16 @@
+import * as S from "./styles";
 
-import * as S from './styles';
-
-import { LoadingSpinner } from '@/shared/atomic/molecules/@loading';
-import { Error } from '@/shared/atomic/molecules/@error';
-import { useAnalyticsHook } from '@/entities/user/interface/profile.hooks';
-import { useAnalyticsStore } from '@/entities/user/adapter/profile.atoms';
+import { LoadingSpinner } from "@/shared/atomic/molecules/@loading";
+import { Error } from "@/shared/atomic/molecules/@error";
+import { useAnalyticsHook } from "@/features/user/core/hooks/profile.hooks";
+import { useAnalyticsStore } from "@/features/user/infrastructure/atoms/profile.atoms";
 
 export const Analytics = () => {
-  const hook = useAnalyticsHook('userId');
+  const hook = useAnalyticsHook("userId");
   const store = useAnalyticsStore();
 
-  if (hook.isLoading) return <LoadingSpinner />
-  if (hook.isError) return <Error />
+  if (hook.isLoading) return <LoadingSpinner />;
+  if (hook.isError) return <Error />;
 
   return (
     <S.Container>
@@ -34,5 +33,5 @@ export const Analytics = () => {
         </S.Statistics>
       </S.Statisticses>
     </S.Container>
-  )
+  );
 };

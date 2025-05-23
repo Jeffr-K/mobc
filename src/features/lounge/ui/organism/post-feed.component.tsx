@@ -14,10 +14,11 @@ import {
   PostContent,
   PostHeader,
   PostText,
+  PostTitle,
   SubCategory,
 } from "../x/styles";
 import { ReactElement } from "react";
-import { Feed } from "@/features/lounge/model/feed.model";
+import { Feed } from "@/features/lounge/infrastructure/model/feed.model";
 
 export function Feeds({
   feeds,
@@ -25,8 +26,8 @@ export function Feeds({
   onFeedSelect,
 }: Readonly<{
   feeds: Feed[];
-  selectedFeedId: number | null;
-  onFeedSelect: (id: number) => void;
+  selectedFeedId: string | null;
+  onFeedSelect: (uuid: string) => void;
 }>): ReactElement {
   if (!feeds || !Array.isArray(feeds)) {
     return null;
@@ -35,7 +36,7 @@ export function Feeds({
   return (
     <FeedContainer>
       {feeds.map((feed: Feed) => (
-        <PostCard key={feed._id} isSelected={feed._id === selectedFeedId} onClick={() => onFeedSelect(feed._id)}>
+        <PostCard key={feed._id} isSelected={feed.identifier.uuid === selectedFeedId} onClick={() => onFeedSelect(feed.identifier.uuid)}>
           <PostContent>
             <PostHeader>
               <ActionButton isMoreButton>
@@ -43,14 +44,13 @@ export function Feeds({
               </ActionButton>
             </PostHeader>
             <CategoryWrapper>
-              <Category>{feed.category.name}</Category>
-              {Array.isArray(feed.category.subCategories) &&
-                feed.category.subCategories.map(subCategory => <SubCategory key={subCategory._id}>{subCategory.name}</SubCategory>)}
+              <Category>{feed.category?.name}</Category>
+              <SubCategory key={feed.category?.parent?._id}>{feed.category?.parent?._id}</SubCategory>
             </CategoryWrapper>
             <AuthorInfo>
-              <Avatar src={feed.author?.avatar ?? "https://via.placeholder.com/32"} alt={feed.author?.name ?? "User"} />
+              <Avatar src={feed.author?.avatar ?? "https://i.pravatar.cc/32?img=8"} alt={feed.author?.username.username ?? "User"} />
               <AuthorMeta>
-                <AuthorName>{feed.author?.name ?? "Anonymous"}</AuthorName>
+                <AuthorName>{feed.author?.username.nickname ?? "Anonymous"}</AuthorName>
                 <AuthorTitle>
                   {feed.author?.title}
                   <span style={{ margin: "0 4px" }}>·</span>
@@ -58,6 +58,7 @@ export function Feeds({
                 </AuthorTitle>
               </AuthorMeta>
             </AuthorInfo>
+            <PostTitle>{feed.title}</PostTitle>
             <PostText>{feed.content}</PostText>
             <PostActions>
               <ActionButton>

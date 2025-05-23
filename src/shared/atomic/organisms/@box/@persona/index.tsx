@@ -1,8 +1,8 @@
-import { LoadingSpinner } from '@/shared/atomic/molecules/@loading';
-import { Error } from '@/shared/atomic/molecules/@error';
-import * as S from './styles';
-import { useQueryProfileHook } from '@/entities/user/interface/profile.hooks';
-import { useProfileStore } from '@/entities/user/adapter/profile.atoms';
+import { LoadingSpinner } from "@/shared/atomic/molecules/@loading";
+import { Error } from "@/shared/atomic/molecules/@error";
+import * as S from "./styles";
+import { useQueryProfileHook } from "@/features/user/core/hooks/profile.hooks";
+import { useProfileStore } from "@/features/user/infrastructure/atoms/profile.atoms";
 
 export const Persona = () => {
   const hook = useQueryProfileHook();
@@ -49,7 +49,7 @@ export const Persona = () => {
 
       <S.Section>
         <S.Label>Interests</S.Label>
-        <S.Text>{persona.interests?.join(', ') || '-'}</S.Text>
+        <S.Text>{persona.interests?.join(", ") || "-"}</S.Text>
       </S.Section>
     </S.Container>
   );

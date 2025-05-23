@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { Modal } from "@/shared/atomic/atoms/@modal/modal";
-import { Category } from "@/features/lounge/model/category.model";
+import { Category } from "@/features/lounge/infrastructure/model/category.model";
 
 interface FeedWriteModalProps {
   isOpen: boolean;
@@ -9,9 +9,9 @@ interface FeedWriteModalProps {
   onSubmit: (title: string, content: string, parentCategoryId: string, subCategoryId?: string, files?: File[]) => void | Promise<void>;
   parentCategories: Category[];
   allCategories: Category[];
-  getSubCategories: (parentId: number) => Category[];
-  isSubmitting?: boolean; // 추가
-  submitButtonText?: string; // 추가
+  childCategories: Category[];
+  isSubmitting?: boolean;
+  submitButtonText?: string;
 }
 
 export function FeedWriteModal({
@@ -19,8 +19,7 @@ export function FeedWriteModal({
   onClose,
   onSubmit,
   parentCategories,
-  allCategories,
-  getSubCategories,
+  childCategories,
   isSubmitting = false, // 기본값 설정
   submitButtonText = "작성하기", // 기본값 설정
 }: Readonly<FeedWriteModalProps>) {
@@ -31,8 +30,6 @@ export function FeedWriteModal({
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const titleInputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const subCategories = selectedParentCategory ? getSubCategories(Number(selectedParentCategory)) : [];
 
   useEffect(() => {
     if (isOpen) {
@@ -48,7 +45,6 @@ export function FeedWriteModal({
   }, [selectedParentCategory]);
 
   const handleClose = () => {
-    // 제출 중일 때는 닫기 방지
     if (isSubmitting) {
       return;
     }
@@ -123,17 +119,17 @@ export function FeedWriteModal({
           >
             <option value="">카테고리를 선택하세요</option>
             {parentCategories.map(category => (
-              <option key={category.identifier.uuid} value={category._id}>
+              <option key={category.identifier.uuid} value={category.identifier.uuid}>
                 {category.name}
               </option>
             ))}
           </CategorySelect>
 
-          {subCategories.length > 0 && (
+          {childCategories.length > 0 && (
             <CategorySelect value={selectedSubCategory} onChange={e => setSelectedSubCategory(e.target.value)} disabled={isSubmitting}>
               <option value="">하위 카테고리 선택 (선택사항)</option>
-              {subCategories.map(category => (
-                <option key={category.identifier.uuid} value={category._id}>
+              {childCategories.map(category => (
+                <option key={category.identifier.uuid} value={category.identifier.uuid}>
                   {category.name}
                 </option>
               ))}

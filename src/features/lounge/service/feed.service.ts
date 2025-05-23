@@ -1,6 +1,8 @@
 import { Observable, of, forkJoin, EMPTY } from "rxjs";
 import { switchMap, map, catchError, tap } from "rxjs/operators";
 import { NavigateFunction } from "react-router-dom";
+import { QueryClient } from "@tanstack/react-query";
+import { QueryKeys } from "@/features/lounge/infrastructure/api/querykeys";
 
 interface FeedInput {
   title: string;
@@ -8,7 +10,12 @@ interface FeedInput {
   parentCategoryId: string;
   subCategoryId?: string;
   files?: File[];
-  fileUrls?: string[];
+}
+
+interface FeedImage {
+  url: string;
+  uuid: string;
+  order: number;
 }
 
 type AccessTokenCheckResult = {
@@ -59,17 +66,22 @@ export const feedRegisterEventHandler = {
   uploadFiles: (createFileFormData: (data: { file: File }) => FormData, uploadMutation: any) => {
     return switchMap((input: FeedInput) => {
       if (!input.files || input.files.length === 0) {
-        return of({ ...input, fileUrls: [] });
+        return of({ ...input, images: [] });
       }
 
       return forkJoin(
-        input.files.map(file => {
+        input.files.map((file, index) => {
           const fileFormData = createFileFormData({ file });
-          return new Observable(subscriber => {
+          return new Observable<{ url: string; uuid: string; order: number }>(subscriber => {
             uploadMutation
               .mutateAsync(fileFormData)
               .then(result => {
-                subscriber.next(result.data.fileUrl);
+                console.log(`파일 업로드 성공: ${result}`);
+                subscriber.next({
+                  url: result.data.url,
+                  uuid: result.data.uuid,
+                  order: index,
+                });
                 subscriber.complete();
               })
               .catch(err => {
@@ -77,7 +89,7 @@ export const feedRegisterEventHandler = {
               });
           });
         }),
-      ).pipe(map(fileUrls => ({ ...input, fileUrls })));
+      ).pipe(map(images => ({ ...input, images })));
     });
   },
 
@@ -87,21 +99,19 @@ export const feedRegisterEventHandler = {
    * @param registerMutation 피드 등록 뮤테이션
    */
   registerFeed: (createFormData: (data: any) => FormData, registerMutation: any) => {
-    return switchMap((input: FeedInput) => {
+    return switchMap((input: FeedInput & { images: FeedImage[] }) => {
       const categoryUuid = input.subCategoryId || input.parentCategoryId;
 
-      console.log("카테고리 UUID:", categoryUuid);
-
-      const feedFormData = createFormData({
+      const payload = {
         title: input.title,
         content: input.content,
-        categoryUuid: input.subCategoryId || input.parentCategoryId,
-        images: input.fileUrls,
-      });
+        categoryUuid: categoryUuid,
+        images: input.images,
+      };
 
       return new Observable(subscriber => {
         registerMutation
-          .mutateAsync(feedFormData)
+          .mutateAsync(payload)
           .then(result => {
             subscriber.next(result);
             subscriber.complete();
@@ -121,6 +131,37 @@ export const feedRegisterEventHandler = {
   handleSuccess: (setIsModalOpen: (isOpen: boolean) => void, navigate: NavigateFunction) => {
     return tap((result: any) => {
       setIsModalOpen(false);
+
+      if (result.data?.identifier?.uuid) {
+        navigate(`/lounge/feed/${result.data.identifier.uuid}`);
+      }
+    });
+  },
+
+  handleSuccessWithInvalidation: (setIsModalOpen: (isOpen: boolean) => void, navigate: NavigateFunction, queryClient: QueryClient) => {
+    return tap((result: any) => {
+      setIsModalOpen(false);
+
+      // 새 글을 캐시에 직접 추가
+      if (result.data) {
+        // 현재 쿼리 키 가져오기
+        const queryKey = [...QueryKeys.feeds.list];
+        const newPost = result.data;
+
+        // 캐시된 모든 쿼리 데이터 업데이트
+        queryClient.setQueriesData({ queryKey: queryKey }, (oldData: any) => {
+          if (!oldData) return oldData;
+
+          return {
+            ...oldData,
+            data: {
+              ...oldData.data,
+              items: [newPost, ...(oldData.data?.items || [])],
+              total: (oldData.data?.total || 0) + 1,
+            },
+          };
+        });
+      }
 
       if (result.data?.identifier?.uuid) {
         navigate(`/lounge/feed/${result.data.identifier.uuid}`);

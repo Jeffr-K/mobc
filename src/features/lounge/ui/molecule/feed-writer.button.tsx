@@ -6,12 +6,18 @@ import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useNavigate } from "react-router-dom";
 import { feedWriteModalAtom } from "@/shared/atomic/organisms/@modal/@feed/atoms";
 import { FeedWriteModal } from "@/shared/atomic/organisms/@modal/@feed/feed-write.modal";
-import { parentCategoriesAtom, categoriesListAtom, selectedCategoryAtom } from "@/features/lounge/adapter/category.adapter";
-import { useMutationFeedRegisterHook, useMutationUploadFileHook } from "@/features/lounge/api/feed/feed.mutation.hook";
+import {
+  parentCategoriesAtom,
+  categoriesListAtom,
+  selectedCategoryAtom,
+  childCategoriesAtom,
+} from "@/features/lounge/infrastructure/adapter/category.adapter";
+import { useMutationFeedRegisterHook, useMutationUploadFileHook } from "@/features/lounge/infrastructure/api/feed/feed.mutation.hook";
 import { feedRegisterEventHandler as handler } from "@/features/lounge/service/feed.service";
 import { useFormData } from "@/shared/hooks/withForm";
 import { useLoginModalHook } from "@/entities/auth/hook/useLoginModalHook";
 import { authService } from "@/entities/auth/service/auth.service";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface FeedWriterButtonProps {
   children: ReactNode;
@@ -26,9 +32,11 @@ type FeedFormData = {
 
 export function FeedWriterButton({ children }: Readonly<FeedWriterButtonProps>): ReactElement {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const [isModalOpen, setIsModalOpen] = useAtom(feedWriteModalAtom);
   const parentCategories = useAtomValue(parentCategoriesAtom);
+  const childCategories = useAtomValue(childCategoriesAtom);
   const allCategories = useAtomValue(categoriesListAtom);
   const setSelectedCategory = useSetAtom(selectedCategoryAtom);
 
@@ -39,25 +47,12 @@ export function FeedWriterButton({ children }: Readonly<FeedWriterButtonProps>):
   const { mutation: uploadFileMutation } = useMutationUploadFileHook();
   const { openLoginModal } = useLoginModalHook();
 
-  const getSubCategories = (parentId: number) => {
-    return allCategories.filter(cat => {
-      console.log("cat", cat);
-      if (typeof cat.parent === "number") {
-        return cat.parent === parentId;
-      }
-      if (cat.parent && typeof cat.parent === "object") {
-        return cat.parent._id === parentId;
-      }
-      return false;
-    });
-  };
-
   const pipeline = pipe(
     handler.checkAccessToken(authService, openLoginModal),
     handler.continueIfValidToken(),
     handler.uploadFiles(createFileFormData, uploadFileMutation),
     handler.registerFeed(createFormData, feedRegisterMutation),
-    handler.handleSuccess(setIsModalOpen, navigate),
+    handler.handleSuccessWithInvalidation(setIsModalOpen, navigate, queryClient),
     handler.handleError(),
   );
 
@@ -89,7 +84,7 @@ export function FeedWriterButton({ children }: Readonly<FeedWriterButtonProps>):
         onSubmit={handleWriteEventSubmit}
         parentCategories={parentCategories}
         allCategories={allCategories}
-        getSubCategories={getSubCategories}
+        childCategories={childCategories}
         isSubmitting={uploadFileMutation.isPending || feedRegisterMutation.isPending}
         submitButtonText={(() => {
           if (uploadFileMutation.isPending) return "파일 업로드 중...";

@@ -10,9 +10,9 @@ import { MessageBox } from "@/shared/atomic/organisms/@box/@message";
 import { SearchBox } from "@/shared/atomic/organisms/@box/@search";
 import { useClickOutside } from "@/shared/hooks/useClickOutside";
 import { DropdownMenu } from "@/shared/atomic/molecules/@menu/@dropdown";
-import { useQueryUserHook } from "@/entities/user/interface/user.hooks";
-import { userAtom } from "@/entities/user/adapter/user.atoms";
-import { User } from "@/entities/user/model/user.model";
+import { useQueryUserHook } from "@/features/user/core/hooks/user.hooks";
+import { userAtom } from "@/features/user/infrastructure/atoms/user.atoms";
+import { User } from "@/features/user/core/model/user.model";
 import { loginModalOpenAtom } from "@/entities/auth/hook/useLoginModalHook";
 
 export const Navigator = (): React.ReactElement => {

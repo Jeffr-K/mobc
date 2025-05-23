@@ -1,10 +1,10 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 
 import { LoungePage } from "@/pages/community/lounge";
-import { ProfilePage } from "@/pages/user/profile";
-import { SettingPage } from "@/pages/user/setting";
+import { ProfilePage } from "@/features/user/presentation/pages/profile/profile";
+import { SettingPage } from "@/features/user/presentation/pages/setting";
 import { Navigator } from "@/shared/atomic/organisms/@navigator/@header";
 
 import { DefaultLayout } from "./shared/atomic/template/@layout/@default";
@@ -22,8 +22,43 @@ import { TalentPoolPage } from "./pages/organization/talent-pool";
 import { CavePage } from "./pages/cave/cave";
 import { CaveDetailPage } from "./pages/cave/cave-detail";
 import { LoginModal } from "@/shared/atomic/organisms/@modal/@login";
+import { toast } from "react-toastify";
 
-const queryClient = new QueryClient();
+export const createQueryClient = () => {
+  return new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false,
+        retry: 1,
+      },
+    },
+    queryCache: new QueryCache({
+      onError: (error, query) => {
+        const errorMessage = query.meta?.errorMessage || (error instanceof Error ? error.message : "오류가 발생했습니다");
+
+        console.error("Query error:", errorMessage);
+
+        toast.error(errorMessage);
+      },
+    }),
+    mutationCache: new MutationCache({
+      onError: (error, _variables, _context, mutation) => {
+        const errorMessage = mutation.meta?.errorMessage || (error instanceof Error ? error.message : "오류가 발생했습니다");
+
+        console.error("Mutation error:", errorMessage);
+
+        toast.error(errorMessage);
+      },
+      onSuccess: (_data, _variables, _context, mutation) => {
+        if (mutation.meta?.successMessage) {
+          toast.success(mutation.meta.successMessage);
+        }
+      },
+    }),
+  });
+};
+
+const queryClient = createQueryClient();
 
 function App() {
   return (
