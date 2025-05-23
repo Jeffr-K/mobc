@@ -140,6 +140,13 @@ export const AuthorTitle = styled.span`
   color: #868e96;
 `;
 
+export const PostTitle = styled.h2`
+  font-size: 18px;
+  font-weight: 600;
+  color: #495057;
+  margin: 0 0 30px;
+`;
+
 export const PostText = styled.div`
   color: #495057;
   white-space: pre-wrap;

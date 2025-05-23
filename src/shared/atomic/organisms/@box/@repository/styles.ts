@@ -37,7 +37,7 @@ export const RepoCard = styled.a`
  flex-direction: column;
  padding: 16px;
  border-radius: ${({ theme }) => theme.borderRadius.md};
- border: 1px solid ${({ theme }) => theme.colors.gray200};
+ border: 1px solid black;
  background-color: ${({ theme }) => theme.colors.white};
  text-decoration: none;
  transition: transform 0.2s ease, box-shadow 0.2s ease;

@@ -1,1 +1,0 @@
-- [우아한 형제들 상태 관리](https://medium.com/@rlghks3004/%EB%A6%AC%EC%95%A1%ED%8A%B8-%EC%95%84%ED%82%A4%ED%85%8D%EC%B2%98-b4860a801d51)

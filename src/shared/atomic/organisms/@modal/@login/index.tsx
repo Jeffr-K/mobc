@@ -1,11 +1,14 @@
-import { useState } from 'react';
-import { LoginForm } from '../../../molecules/@form/@login';
-import * as S from './styles';
-import { Modal } from '@/shared/atomic/atoms/@modal/modal';
-import { FcGoogle } from 'react-icons/fc';
-import { BsApple } from 'react-icons/bs';
-import { RiKakaoTalkFill } from 'react-icons/ri';
-import { SiNaver } from 'react-icons/si';
+import { useState } from "react";
+import { LoginForm } from "../../../molecules/@form/@login";
+import * as S from "./styles";
+import { Modal } from "@/shared/atomic/atoms/@modal/modal";
+import { FcGoogle } from "react-icons/fc";
+import { BsApple } from "react-icons/bs";
+import { RiKakaoTalkFill } from "react-icons/ri";
+import { SiNaver } from "react-icons/si";
+import { useAtom } from "jotai";
+import { loginLoadingAtom, loginModalOpenAtom } from "@/entities/auth/hook/useLoginModalHook";
+import { useAuthHook } from "@/entities/auth/hook/useAuthHook";
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -15,23 +18,23 @@ interface LoginModalProps {
   isLoading?: boolean;
 }
 
-export const LoginModal = ({
-  isOpen,
-  onClose,
-  onLogin,
-  onSocialLogin,
-  isLoading,
-}: LoginModalProps) => {
+export const LoginModal = () => {
+  const [isOpen, setIsOpen] = useAtom(loginModalOpenAtom);
+  const [isLoading] = useAtom(loginLoadingAtom);
+  const { login, socialLogin } = useAuthHook();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const handleLoginSubmitButton = async (email: string, password: string) => {
-    await onLogin(email, password);
+  const handleClose = () => {
+    setIsOpen(false);
   };
 
+  const handleLoginSubmitButton = async (email: string, password: string) => {
+    await login(email, password);
+  };
+
+  if (!isOpen) return null;
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={handleClose}>
       <S.Container>
         <S.HeaderContainer>
           <S.Title>PERSONA</S.Title>
@@ -39,6 +42,7 @@ export const LoginModal = ({
         </S.HeaderContainer>
 
         <S.FormContainer>
+          {/* Props drilling 제거 */}
           <LoginForm onSubmit={handleLoginSubmitButton} isLoading={isLoading} />
           <S.FormFooter>
             <S.StyledLink to="/signup">회원가입</S.StyledLink>
@@ -49,21 +53,20 @@ export const LoginModal = ({
           </S.Divider>
 
           <S.SocialLoginWrapper>
-            <S.SocialLoginButton provider="google" onClick={() => onSocialLogin?.('google')}>
+            <S.SocialLoginButton provider="google" onClick={() => socialLogin("google")}>
               <FcGoogle size={24} />
             </S.SocialLoginButton>
-            <S.SocialLoginButton provider="apple" onClick={() => onSocialLogin?.('apple')}>
+            <S.SocialLoginButton provider="apple" onClick={() => socialLogin("apple")}>
               <BsApple size={24} />
             </S.SocialLoginButton>
-            <S.SocialLoginButton provider="kakao" onClick={() => onSocialLogin?.('kakao')}>
+            <S.SocialLoginButton provider="kakao" onClick={() => socialLogin("kakao")}>
               <RiKakaoTalkFill size={24} color="#000000DE" />
             </S.SocialLoginButton>
-            <S.SocialLoginButton provider="naver" onClick={() => onSocialLogin?.('naver')}>
+            <S.SocialLoginButton provider="naver" onClick={() => socialLogin("naver")}>
               <SiNaver size={24} color="#000000DE" />
             </S.SocialLoginButton>
           </S.SocialLoginWrapper>
         </S.FormContainer>
-
       </S.Container>
     </Modal>
   );

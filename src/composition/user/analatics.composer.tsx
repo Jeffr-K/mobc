@@ -1,6 +1,6 @@
 import { useSession } from "@/entities/auth/interface/auth-session.hooks";
-import { useAnalyticsHook } from "@/entities/user/interface/profile.hooks";
-import { Analytics } from "@/features/user/ui/analytics.x-component"; // Analytics 컴포넌트 import 추가
+import { useAnalyticsHook } from "@/features/user/core/hooks/profile.hooks";
+import { Analytics } from "@/features/user/presentation/organisms/analytics.component"; // Analytics 컴포넌트 import 추가
 
 export function AnalyticsComposer() {
   const { user } = useSession();

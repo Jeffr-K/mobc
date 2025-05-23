@@ -1,12 +1,12 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from "react";
+import styled from "styled-components";
 
-import * as MoleculeProfileCard from '@/shared/atomic/molecules/@card/@profile/styles';
+import * as MoleculeProfileCard from "@/shared/atomic/molecules/@card/@profile/styles";
 // import * as FeedGenerator from '@/atomic/organisms/@feed/@post/styles';
-import * as MoleculeNavigatorFooter from '@/shared/atomic/organisms/@navigator/@bottom/styles';
-import * as Suggestions from '@/shared/atomic/organisms/@suggestion/styles';
-import * as OrganismTrendingTopics from '@/shared/atomic/organisms/@box/@trend/@topics/styles';
-import * as S from './styles';
+import * as MoleculeNavigatorFooter from "@/shared/atomic/organisms/@navigator/@bottom/styles";
+import * as Suggestions from "@/shared/atomic/organisms/@suggestion/styles";
+import * as OrganismTrendingTopics from "@/shared/atomic/organisms/@box/@trend/@topics/styles";
+import * as S from "./styles";
 
 interface LoungeLayoutProps {
   children?: React.ReactNode;
